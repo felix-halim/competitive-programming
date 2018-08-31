@@ -1,0 +1,26 @@
+<h2 align="center">Pembahasan Soal B - Largest Labeled Common Ancestor</h2>
+
+<p>
+Misalkan:
+<pre>
+  <i>p(<b>N</b>)</i> adalah parent dari node <b>N</b>, dan
+  <i>f(<b>A</b>,<b>B</b>) = <b>X</b></i>, dimana <b>X</b> adalah node dengan label terbesar yang merupakan ancestor dari node <b>A</b> dan <b>B</b>.
+</pre>
+</p>
+
+<p>
+Maka bisa dibuktikan bahwa:
+<pre>
+  jika <b>A</b> > <b>B</b>, maka <i>f(<b>A</b>,<b>B</b>) = f(p(<b>A</b>),<b>B</b>)</i>,
+  jika <b>A</b> &lt; <b>B</b>, maka <i>f(<b>A</b>,<b>B</b>) = f(<b>A</b>,p(<b>B</b>))</i>, dan
+  jika <b>A</b> = <b>B</b>, maka <i>f(<b>A</b>,<b>B</b>) = <b>X</b></i>
+</pre>
+</p>
+
+<p>
+Apakah ada yang ingin mencoba membuktikan hal ini?
+</p>
+
+<p>
+Jika anda bisa membuktikan hal diatas, maka implementasinya akan sangat mudah, seperti dibawah ini.
+</p>

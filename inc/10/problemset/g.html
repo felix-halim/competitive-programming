@@ -1,0 +1,42 @@
+<center>
+<h1>Problem G - Finding The Right Song</h1>
+Time Limit: 8s
+</center>
+
+<p>Silcat has N songs in her digital library. Each song is described as a sequence of M melodies. A melody is an integer with value between 0 and 1,000,000.</p>
+<p>Everytime Silcat hear an interesting sequence of melodies of length 10, Silcat always asks Sucat whether she has a song in her library which contains that melodies. A sequence of melodies S exists in a song if the song has a continuous subsequence of melodies S. Silcat has ensured that any sequence of melodies of length 10 does not exist in more than one song in her library, and occurs only once in a song.</p>
+<p>Since Sucat is busy with his work today, he asks you to create a program to answer all Silcat's questions.</p>
+
+<h3>Input</h3>
+<p>The first line begins with two integers N and Q (1 &le; N &le; 2,000; 1 &le; Q &le; 20,000) the number of songs in her digital library and the number of questions Silcat will ask consecutively. The next N lines each begins with an integer M<sub>i</sub> (10 &le; M<sub>i</sub> &le; 1,000) the number of melodies in i<sup>th</sup> song, followed by M<sub>i</sub> integers denoting the sequence of melodies in i<sup>th</sup> song. The next Q lines each will contain 10 integers denoting the sequence of melodies S that is asked by Silcat.</p>
+<h3>Output</h3>
+<p>Answer each question in a line. If S can be found in a song, output two numbers, the song number that contains S and the starting position of the sequence S in the song (starting with 1). If S can not be found, output "not found" (without quote).</p>
+
+<table border="0" cellspacing="0" cellpadding="0" bgcolor="#000000">
+<tr><td>
+<table border="0" cellspacing="1" cellpadding="4" width="755">
+<tr><th align="left" width="500" bgcolor="#FFFFFF">Sample Input</th><th align="left" width="250" bgcolor="#FFFFFF">Output for Sample Input</th></tr>
+<tr valign="top"><td bgcolor="#FFFFFF"><pre>7 5
+17 13 15 9 16 16 3 18 11 5 11 6 18 1 6 14 18 6
+18 14 9 8 2 10 10 16 6 11 6 16 10 20 8 5 15 6 2
+17 7 6 14 9 9 7 5 13 5 17 17 9 19 9 5 2 16
+19 7 6 19 13 18 12 16 2 12 13 7 2 20 17 11 8 5 6 12
+20 10 13 13 9 9 10 14 15 16 9 4 9 5 5 13 8 20 13 7 7
+18 16 13 13 11 10 18 12 17 18 6 17 4 3 19 9 16 4 10
+20 11 2 4 19 13 8 16 17 11 18 15 5 3 9 11 19 3 19 6 18
+10 18 12 17 18 6 17 4 3 19
+13 13 11 10 18 12 17 18 6 17
+11 12 17 7 8 5 6 8 3 16
+15 16 9 4 9 5 5 13 8 20
+16 6 11 6 16 10 20 8 5 15
+</pre>
+</td><td bgcolor="#FFFFFF"><pre>6 5
+6 2
+not found
+5 8
+2 7
+</pre>
+</td></tr>
+</table>
+</td></tr>
+</table>

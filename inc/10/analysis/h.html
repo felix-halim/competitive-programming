@@ -1,0 +1,13 @@
+<h2 align="center">Pembahasan Soal H - Disconnected Graph</h2>
+
+<p>Soal ini bisa disederhanakan dengan membuang semua edge yang dihancurkan.
+Dari graph yang ada, kita cari ada berapa banyak node yang spesial dalam suatu
+komponen yang terhubung.
+Suatu komponen yang terhubung bisa dicari dengan DFS atau disjoint set.
+Setelah kita mengetahui banyaknya node yang special di dalam komponen-komponen terhubung yang ada,
+untuk menghitung banyaknya pair antara 2 special node yang berada di komponen berbeda
+dapat dilakukan dengan mengalikan banyaknya special node yang ada di dalam komponen dengan
+banyaknya special node yang ada di luar komponen.
+</p>
+
+<p>Berikut adalah contoh implementasi menggunakan disjoint set.</p>

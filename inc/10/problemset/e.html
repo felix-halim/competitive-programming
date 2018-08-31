@@ -1,0 +1,50 @@
+<center>
+<h1>Problem E - Playing with Boxes</h1>
+Time Limit: 3s
+</center>
+
+<p>You may be don't know about this, but Ceemot does like to play with boxes during her free time. She has N different boxes in one pile. First, she splits them into two piles (not necessary the same size), then she picks one of the piles with at least two boxes and splits it into two again. She repeats this until each pile has only one box.</p>
+<p>As a computer scientist, she wonders the number of different ways in which she can do this.</p>
+<p>For example, if she begins with a pile of 3 boxes (A, B and C) then there are three ways to do her weird hobby:</p>
+<ol>
+<li>Split ABC into A and BC, split BC into B and C.</li>
+<li>Split ABC into B and AC, split AC into A and C.</li>
+<li>Split ABC into C and AB, split AB into A and B.</li>
+</ol>
+
+<p>If she begins with a pile of 4 boxes (A, B, C and D) then there are eighteen ways to do this:</p>
+<ul>
+<li>Split ABCD into AB and CD, split AB into A and B, split CD into C and D.</li>
+<li>Split ABCD into AB and CD, split CD into C and D, split AB into A and B.</li>
+<li>Split ABCD into AC and BD, split AC into A and C, split BD into B and D.</li>
+<li>...</li>
+<li>Split ABCD into A and BCD, split BCD into B and CD, split CD into C and D.</li>
+<li>Split ABCD into A and BCD, split BCD into C and BD, split BD into B and D.</li>
+<li>Split ABCD into A and BCD, split BCD into D and BC, split BC into B and C.</li>
+<li>...</li>
+</ul>
+
+<p>Help her to count the number of different ways in which she can carry out this splitting procedure. As the number may be very big, modulo the output with 1,000,000,007.</p>
+
+<h3>Input</h3>
+<p>The first line of input contains an integer T (1 &le; T &le; 1,000) the number of cases. Each case begins with an integer N (2 &le; N &le; 100,000) the number of different boxes Ceemot has in one pile originally.</p>
+<h3>Output</h3>
+<p>For each test case, output in a line the number of different ways in which she can carry out her splitting procedure. Modulo this number with 1,000,000,007.</p>
+
+<table border="0" cellspacing="0" cellpadding="0" bgcolor="#000000">
+<tr><td>
+<table border="0" cellspacing="1" cellpadding="4" width="600">
+<tr><th align="left" width="250" bgcolor="#FFFFFF">Sample Input</th><th align="left" width="250" bgcolor="#FFFFFF">Output for Sample Input</th></tr>
+<tr valign="top"><td bgcolor="#FFFFFF"><pre>3
+3
+4
+7
+</pre>
+</td><td bgcolor="#FFFFFF"><pre>3
+18
+56700
+</pre>
+</td></tr>
+</table>
+</td></tr>
+</table>

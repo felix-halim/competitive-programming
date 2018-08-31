@@ -1,0 +1,10 @@
+<h2 align="center">Pembahasan Soal I - Maximum Sum in Matrix</h2>
+
+<p>States dari dynamic programming nya adalah dp[n][m][k] seperti yang dijelaskan di blog 
+<a target="_blank" href="http://www.suhendry.net/blog/?p=1135&page=11">Suhendry</a> dan
+<a target="_blank" href="http://marcadian.wordpress.com/2010/11/10/inc-2010/10/">Eko</a>.
+Dalam implementasinya, kita hanya membutuhkan value dari dua state terakhir: dp[i] dan dp[i-1].
+Sehingga kita dapat menghemat memory.
+Banyak yang bilang ini adalah "dp terbang" atau "dp on the fly".
+Berikut adalah contoh implementasinya.
+</p>

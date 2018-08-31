@@ -1,0 +1,16 @@
+<h2 align="center">Pembahasan Soal G - Finding The Right Song</h2>
+
+<p>Soal ini saya buat karena ter-inspirasi oleh <a target="_blank" href="http://gizmodo.com/5647458/how-shazam-works-to-identify-nearly-every-song-you-throw-at-it?utm_source=feedburner&utm_medium=feed&utm_campaign=Feed:+gizmodo/full+(Gizmodo)">Shazam</a>.
+Shazam adalah suatu applikasi iPhone yang dapat mengenali lagu yang sedang dimainkan dengan cara merekam 
+10 detik di bagian manapun dari lagu yang sedang dimainkan.
+Rekaman 10 detik tersebut kemudian dikirim ke server Shazam dan servernya akan memberitahu nama lagu tersebut.
+Shazam memiliki 20 ribu lagu dan hanya membutuhkan beberapa milisecond untuk pencariannya.
+</p>
+
+<p>Soal ini adalah versi simplenya dari masalah yang dihadapi Shazam dan tentunya dapat diselesaikan dengan cara yang sama
+dengan Shazam, yaitu menggunakan hash table.
+Hash table ini akan diisi dengan potongan-potongan 10 detik dari semua bagian dari semua lagu yang ada.
+Sehingga, kalau kita memiliki query yang berisi 10 detik potongan lagu, kita dapat mencari (lookup) nama lagu tersebut
+dan posisi dimulainya potongan tersebut dari dalam hash table dalam O(1) expected.
+
+<p><a href="http://en.wikipedia.org/wiki/Linear_probing">Linear probing</a> mungkin adalah cara termudah yang dapat digunakan untuk mengatasi hash collisions dimana ada dua melodi mempunyai hash value yang sama. Saya sengaja membuat soal ini untuk hanya bisa solve menggunakan hash table buatan sendiri atau dengan meng-override HashMap (bagi pengguna Java). Mereka yang menggunakan STL-map akan mendapatkan TLE karena STL-map di-implementasi menggunakan Red-Black tree yang membutuhkan O(log N) operasi untuk mengakses elemen di dalamnya. Berikut adalah contoh implementasinya.</p>

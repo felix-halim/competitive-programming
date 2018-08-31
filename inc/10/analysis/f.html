@@ -1,0 +1,16 @@
+<h2 align="center">Pembahasan Soal F - Searching in Tree</h2>
+
+<p>Dibawah ini adalah contoh implementasi yang dijelaskan 
+di <a target="_blank" href="http://www.suhendry.net/blog/?p=1135&page=8">blog Suhendry</a>.
+Implementasi dalam C/C++ bisa dilakukan tanpa menggunakan pointer. 
+Untuk membuat node baru, kita tinggal meminta index dari kumpulan node yang bebas. 
+Untuk menghapus node, kita tinggal kembalikan index dari node yang dihapus ke dalam kumpulan node bebas.
+Catatan: implementasi dibawah ini <b>bukan</b> AVL tree, tetapi tree buatan saya sendiri :P.
+</p>
+
+<p>Semua queries untuk sub-tree tertentu bisa dikumpulkan terlebih dahulu dan kemudian dijawab sekaligus saat kita membangun tree.</p>
+
+<p>Solusi alternatif menggunakan <a target="_blank" href="http://en.wikipedia.org/wiki/Segment_tree">Segment-tree</a> dijelaskan di 
+<a target="_blank" href="http://marcadian.wordpress.com/2010/11/10/inc-2010/7/">blog Eko</a>.
+Solusi Segment-tree tersebut memerlukan O(N log N) space, sedangkan tree saya hanya membutuhkan O(N) space.
+</p>

@@ -1,0 +1,20 @@
+<h2 align="center">Pembahasan Soal D - Sum to Zero</h2>
+
+<p>Misalkan kita mempunyai 2 <b>sorted</b> array: <b>B</b> dan <b>C</b> yang masing-masing berisi <b>N</b> bilangan.
+Untuk mencari index <b>b</b> di array <b>B</b> dan index <b>c</b> di array <b>C</b> dimana <b>B</b>[<b>b</b>] + <b>C</b>[<b>c</b>] = <b>x</b>, dapat dilakukan dalam O(<b>N</b>) operasi.
+Caranya adalah dengan menelusuri index <b>b</b> secara menaik (dari 0 sampai N-1) dan menelusuri index <b>c</b> secara menurun (dari N-1 sampai 0),
+atau sebaliknya.
+Illustrasinya ada di <a href="http://www.suhendry.net/blog/?p=1135&page=6">blog Suhendry</a>.
+</p>
+
+<p>Jika kita bisa memecahkan masalah diatas, maka cara mencari <b>A[a] + B[b] + C[<b>c</b>] = 0</b> adalah sama dengan cara mencari <b>B[b] + C[<b>c</b>] = -A[a]</b>.
+Untuk setiap bilangan <b>x</b> di array A, kita cari apakah ada <b>B</b>[<b>b</b>] + <b>C</b>[<b>c</b>] = <b>x</b>.
+Karena ada <b>N</b> bilangan di array A, total kompleksitasnya adalah O(N^2).
+</p>
+
+<p>Untuk mencari banyaknya pasangan elemen (<b>b</b>,<b>c</b>) dimana <b>B</b>[<b>b</b>] + <b>C</b>[<b>c</b>] = <b>x</b>, kita bisa menghitung 
+berapa banyak elemen di <b>B</b> yang valuenya adalah <b>B</b>[<b>b</b>] (<b>countB</b>), dan berapa banyak elemen di <b>C</b> yang valuenya adalah <b>C</b>[<b>c</b>] (<b>countC</b>).
+Maka banyaknya pasangan elemen (<b>b</b>,<b>c</b>) dimana <b>B</b>[<b>b</b>] + <b>C</b>[<b>c</b>] = <b>x</b> adalah <b>countB * countC</b>.
+</p>
+
+<p>Dibawah ini adalah contoh implementasi O(N^2) untuk problem D.</p>

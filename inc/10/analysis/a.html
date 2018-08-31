@@ -1,0 +1,14 @@
+<h2 align="center">Pembahasan Soal A - The Best Team</h2>
+
+<p>
+Untuk kasus terburuk dimana N = 50, banyaknya tim berbeda yang bisa dibentuk adalah nCk(50,3) = 50*49*48 / 1/2/3 = 19600 tim.
+19600 tim termasuk angka yang sangat sedikit (dalam 2 detik, komputer juri dapat melakukan lebih dari 10 juta operasi), 
+sehingga kita dapat mengecek nilai kompatibilitas untuk setiap tim yang dapat dibentuk (brute-force).
+</p>
+
+<p>
+Untuk implementasinya, bisa dilakukan 3 nested loop (untuk murid pertama, kedua, dan ketiga).
+Untuk membentuk sebuah tim, ketiga murid ini haruslah orang yang berbeda.
+Untuk setiap tim yang bisa dibentuk, kita tinggal menyimpan kompatibilitas tertinggi.
+Berikut adalah contoh implementasinya.
+</p>

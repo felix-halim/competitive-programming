@@ -1,0 +1,33 @@
+<center>
+<h1>Problem C - Stack Machine Simulator</h1>
+Time Limit: 2s
+</center>
+
+<p>A stack machine has two type of operations:</p>
+<ul>
+<li>Push an element into stack. This operation is denoted by a command string "<font face="Courier New">+?</font>" where <font face="Courier New">?</font> is any alphabet 'a'-'z' or 'A'-'Z', it means append a character <font face="Courier New">?</font> into stack.</li>
+<li>Reverse all element in stack. This operation is denoted by a command string "<font face="Courier New">^</font>". It will reverse all elements in stack, do nothing if the stack is empty.</li>
+</ul>
+
+<p>For example, command string "<font face="Courier New">+a+b+c+d^</font>" means: push a, push b, push c, push d and reverse. After "<font face="Courier New">+a+b+c+d^</font>" executed, the stack contains "<font face="Courier New">dcba</font>". Write a program which take the command string as the input and output the stack's content after the command is executed.</p>
+
+<h3>Input</h3>
+<p>The first line of input contains an integer T (1 &le; T &le; 1,000) the number of cases. Each case contains a string S denoting the command string as described above. S will be between 1 and 100 characters long.</p>
+<h3>Output</h3>
+<p>For each test case, output in a line the content of the stack after the command is executed.</p>
+
+<table border="0" cellspacing="0" cellpadding="0" bgcolor="#000000">
+<tr><td>
+<table border="0" cellspacing="1" cellpadding="4" width="600">
+<tr><th align="LEFT" width="250" bgcolor="#FFFFFF">Sample Input</th><th align="LEFT" width="250" bgcolor="#FFFFFF">Output for Sample Input</th></tr>
+<tr valign="top"><td bgcolor="#FFFFFF"><pre>2
++a+b
++A+B^+c^
+</pre>
+</td><td bgcolor="#FFFFFF"><pre>ab
+cAB
+</pre>
+</td></tr>
+</table>
+</td></tr>
+</table>

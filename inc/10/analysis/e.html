@@ -1,0 +1,70 @@
+<h2 align="center">Pembahasan Soal E - Playing with Boxes</h2>
+
+<p>
+Bagi yang terlalu sering menggunakan top-down approach, soal ini akan menjadi sulit dipecahkan.
+Misalkan <i>f(<b>N</b>)</i> adalah banyaknya cara kita memisahkan <b>N</b> kotak.
+Maka banyaknya cara memisahkan kotak-kotak tersebut bisa dihitung secara rekursif:
+
+<pre>
+<i>f(<b>N</b>)</i> = sum(nCk(N-1,i) * f(i+1) * f(N-(i+1)) * (N-2)! / i! / (N-(i+1)-1)!) dimana i = 0..N-1
+</pre>
+
+Cara diatas hanya bisa digunakan untuk menyelesaikan untuk N &lt;= 10.
+Untuk menjawab N > 10, kita berharap bahwa jawabannya memiliki sebuah pola
+(atau berpikir terbalik seperti yang dijelaskan di <a target="_blank" href="http://www.suhendry.net/blog/?p=1135&page=7">blog Suhendry</a>).
+Untuk mencari pola tersebut, pertama-tama kita jabarkan jawaban untuk N dari 1 sampai 10 menggunakan program berikut.
+</p>
+
+<pre class="code">#include &lt;stdio.h>
+
+#define REP(i,n) for (int i=0,_n=n; i&lt;_n; i++)
+
+long long nCk(int n, int k){
+    long long ret = 1;
+    for (int i=1; i&lt;=k; i++)
+        ret = ret * (n-i+1) / i;
+    return ret;
+}
+
+long long fac(int n){
+    if (n&lt;=1) return 1;
+    return n * fac(n-1);
+}
+
+long long f(int N){
+    if (N&lt;=2) return 1;
+    long long ret = 0;
+    REP(i,N-1){
+        ret += nCk(N-1,i) * f(i+1) * f(N-(i+1)) * fac(N-2) / fac(i) / fac(N-(i+1)-1);
+    }
+    return ret;
+}
+
+int main(){
+    // Generate the first 10 results
+    for (int i=1; i&lt;=10; i++)  
+        printf("%d = %lld\n",i,f(i));
+
+    /*
+    Hasilnya adalah:
+
+    1 = 1
+    2 = 1
+    3 = 3
+    4 = 18
+    5 = 180
+    6 = 2700
+    7 = 56700
+    8 = 1587600
+    9 = 57153600
+    10 = 2571912000
+    */
+}
+</pre>
+
+    
+<p>Terlihat pola bahwa jawaban untuk f(N) ternyata adalah hasil dari perkalian f(N-1) dengan suatu bilangan.
+Jika kita telusuri lebih dalam, kita bisa menemukan pola perkalian tersebut.
+Sehingga kita bisa membuat solusi yang lebih simple dan cepat, seperti berikut ini.
+</p>
+
