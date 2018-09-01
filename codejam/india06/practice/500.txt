@@ -1,0 +1,80 @@
+
+Problem Statement
+    
+In this problem we are going to make an 11x11 chess board out of the Cartesian plane. The positions on our board will be the coordinates (x,y) where
+0 <= x <= 10,
+0 <= y <= 10, and
+x,y are integers.
+We will consider two different chess pieces: rooks and bishops. A rook may move either horizontally or vertically. It may move any number of spaces in a straight line, so long as it does not run into another piece on the board. Each location that the rook can move to is considered 'under control'. A bishop is similar, except that it moves diagonally, instead of horizontally and vertically. For example, the following diagram shows the 11x11 board with one rook ('R') and one bishop ('B') where the locations under control are denoted by 'X':
+ . . X . . . . X . . .
+ . . X . . . X . . . .
+ X X R X X X X X X X X
+ X . X . X . . . . . .
+ . X X X . . . . . . .
+ . . B . . . . . . . .
+ . X . X . . . . . . .
+ X . . . X . . . . . .
+ . . . . . X . . . . .
+ . . . . . . X . . . .
+ . . . . . . . X . . .
+  You will be given a String[] pieces describing the locations of the rooks and bishops on the board. Each element will have the format (quotes for clarity) "x y P", where x and y are coordinates and P is Rook or Bishop. For example, "9 10 Rook" means there is a Rook at the position (9,10). Return the number of distinct positions that are collectively 'under control' by the given pieces. Note that the locations of the actual pieces should not be considered in the count. Hence, for the input above, you would return 27.
+Definition
+    
+Class:
+UnderControl
+Method:
+howMany
+Parameters:
+String[]
+Returns:
+int
+Method signature:
+int howMany(String[] pieces)
+(be sure your method is public)
+    
+
+Constraints
+-
+pieces will contain between 1 and 50 elements inclusive.
+-
+Each element of pieces will have the form (quotes for clarity) "x y P" where: x is an integer with no extra leading zeros between 0 and 10 inclusive, y is an integer with no extra leading zeros between 0 and 10 inclusive, and P is either Rook or Bishop.
+-
+No two pieces will be at the same location.
+Examples
+0)
+
+    
+{"0 0 Rook"}
+Returns: 20
+A rook in the lower left corner controls 20 squares. Each controlled square has the form (0,y) or (x,0) - with the exception of (0,0), which is the position of the rook.
+1)
+
+    
+{"0 0 Bishop"}
+Returns: 10
+A bishop in the lower left corner only controls 10 squares.
+2)
+
+    
+{"5 5 Bishop"}
+Returns: 20
+Near the center, the bishop controls more squares.
+3)
+
+    
+{"0 5 Rook","2 5 Rook","5 5 Rook","9 5 Rook"}
+Returns: 47
+Many rooks sharing the same y-coordinate.
+4)
+
+    
+{"0 0 Bishop","1 1 Rook"}
+Returns: 20
+The rook blocks the path of the Bishop.
+5)
+
+    
+{"2 5 Bishop","2 8 Rook"}
+Returns: 27
+The example in the problem statement.
+This problem statement is the exclusive and proprietary property of TopCoder, Inc. Any unauthorized use or reproduction of this information without the prior written consent of TopCoder, Inc. is strictly prohibited. (c)2003, TopCoder, Inc. All rights reserved.

@@ -1,0 +1,51 @@
+<h1>Problem Statement</h1>
+<p>You are given a String toSort containing only '0's and '1's. Using only exchange operations, we must sort this string so every '0' comes before every '1'. Return the minimal number of exchanges necessary.</p>
+
+<h1>Definition</h1>
+<pre>
+Class:              Sort01
+Method:             shortest
+Parameters:         String
+Returns:            int
+Method signature:   int shortest(String toSort)
+(be sure your method is public)
+</pre>
+
+<h1>Notes</h1>
+<p>You can exchange any two characters in the string, not just adjacent ones.</p>
+
+<h1>Constraints</h1>
+<ul>
+<li>toSort will contain between 1 and 50 characters, inclusive.
+<li>Every character in toSort will be '0' (zero) or '1' (one).
+</ul>
+
+<h1>Examples</h1>
+<pre>
+0)
+
+"010"
+Returns: 1
+The string can be sorted in one swap, exchanging the second and third characters.
+1)
+
+"1100"
+Returns: 2
+
+2)
+
+"00001"
+Returns: 0
+
+3)
+
+"10000"
+Returns: 1
+
+4)
+
+"1101010001"
+Returns: 3
+</pre>
+
+<p>This problem statement is the exclusive and proprietary property of <a href="http://www.topcoder.com/tc">TopCoder</a>, Inc. Any unauthorized use or reproduction of this information without the prior written consent of TopCoder, Inc. is strictly prohibited. (c)2003, TopCoder, Inc. All rights reserved.</p>

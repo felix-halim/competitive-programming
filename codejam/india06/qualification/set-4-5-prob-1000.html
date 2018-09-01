@@ -1,0 +1,70 @@
+<h1>Problem Statement</h1>
+<p>Let X and Y be positive integers. We say that Y is a divisor of X if and only if there is a positive integer Z such that X = Y*Z.
+You will be given a String[] numbers. Each element in this String[] will contain a positive integer. For each of the given integers compute the sum of its positive divisors, itself excluded. Return a String[] containing the computed sums in the same order, with no unnecessary leading zeroes.</p>
+
+<h1>Definition</h1>
+<pre>
+Class:              PerfectNumbers
+Method:             sumDivisors
+Parameters:         String[]
+Returns:            String[]
+Method signature:   String[] sumDivisors(String[] numbers)
+(be sure your method is public)
+</pre>
+
+<h1>Notes</h1>
+<p>All the numbers in the input, and all the numbers you should output will fit into 64-bit signed integer variables.</p>
+
+<h1>Constraints</h1>
+<ul>
+<li>numbers will contain between 1 and 50 elements, inclusive.
+<li>Each element in numbers contains between 1 and 13 digits ('0'-'9'), inclusive.
+<li>No element in numbers will contain leading zeroes.
+</ul>
+
+<h1>Examples</h1>
+<pre>
+0)
+
+{"6"}
+Returns: {"6" }
+The divisors of 6 (other than 6 itself) are 1, 2, and 3. Their sum is 1+2+3 = 6.
+
+1)
+
+{"28"}
+Returns: {"28" }
+Divisors of 28 are 1, 2, 4, 7, and 14, and their sum is 1+2+4+7+14 = 28.
+2)
+
+{"4", "8", "16", "32"}
+Returns: {"3", "7", "15", "31" }
+
+3)
+
+{"13", "47", "997"}
+Returns: {"1", "1", "1" }
+
+4)
+
+{"510510"}
+Returns: {"1231314" }
+510510 = 2*3*5*7*11*13*17
+5)
+
+{"235152", "235326326132", "1234567890123"}
+Returns: {"461232", "176530725964", "411987510213" }
+
+6)
+
+{"9999999999999"}
+Returns: {"4903272088641" }
+This is the largest valid input number.
+7)
+
+{"1"}
+Returns: {"0" }
+And this is the smallest valid input.
+</pre>
+
+<p>This problem statement is the exclusive and proprietary property of <a href="http://www.topcoder.com/tc">TopCoder</a>, Inc. Any unauthorized use or reproduction of this information without the prior written consent of TopCoder, Inc. is strictly prohibited. (c)2003, TopCoder, Inc. All rights reserved.</p>

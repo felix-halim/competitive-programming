@@ -1,0 +1,58 @@
+<h1>Problem Statement</h1>
+<p>You will be given two Strings pattern and letters, containing uppercase letters ('A' - 'Z'). pattern can contain also several '?', representing hidden characters. You are to return the lexicographically earliest string which can be derived from pattern by replacing each '?' character with a character from letters. Each character from letters can be used only once per occurrence in letters.</p>
+
+<h1>Definition</h1>
+<pre>
+Class:              PatternFiller
+Method:             fill
+Parameters:         String, String
+Returns:            String
+Method signature:   String fill(String pattern, String letters)
+(be sure your method is public)
+</pre>
+
+<h1>Notes</h1>
+<p>If letters contains several identical characters, each of them can be used exactly once (see example 1).</p>
+
+<h1>Constraints</h1>
+<ul>
+<li>pattern will contain between 1 and 50 characters, inclusive.
+<li>Each character in pattern will be an uppercase letter ('A' - 'Z') or '?'.
+<li>letters will contain between Q and 50 characters, inclusive, where Q is the number of '?'s in pattern.
+<li>Each character in letters will be an uppercase letter ('A' - 'Z').
+</ul>
+
+<h1>Examples</h1>
+<pre>
+0)
+
+"AB??ACA?BA"
+"GRAYCODE"
+Returns: "ABACACADBA"
+
+1)
+
+"??T?"
+"SEASEA"
+Returns: "AATE"
+
+2)
+
+"A??A"
+"BABA"
+Returns: "AAAA"
+
+3)
+
+"AB?SF?G??F???"
+"ABACABA"
+Returns: "ABASFAGAAFBBC"
+
+4)
+
+"?NJOYTHECONTE??"
+"TSE"
+Returns: "ENJOYTHECONTEST"
+</pre>
+
+<p>This problem statement is the exclusive and proprietary property of <a href="http://www.topcoder.com/tc">TopCoder</a>, Inc. Any unauthorized use or reproduction of this information without the prior written consent of TopCoder, Inc. is strictly prohibited. (c)2003, TopCoder, Inc. All rights reserved.</p>

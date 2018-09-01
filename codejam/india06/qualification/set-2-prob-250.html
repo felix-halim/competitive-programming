@@ -1,0 +1,53 @@
+<h1>Problem Statement</h1>
+<p>An election has just occurred. Given a int[] votes, where votes[i] is the number of votes for the ith candidate, you want to find the percentage of the total number of votes received by each candidate. If the percentage is not an integer, it must be rounded to an integer; you can choose to round up or down. You must make your choices in such a way that the sum of the percentages is exactly 100. Return the number of percentages for which you round up.</p>
+
+<h1>Definition</h1>
+<pre>
+Class:              GeneralElection
+Method:             numberOfRoundedUp
+Parameters:         int[]
+Returns:            int
+Method signature:   int numberOfRoundedUp(int[] votes)
+(be sure your method is public)
+</pre>
+
+<h1>Constraints</h1>
+<ul>
+<li>votes will contain between 1 and 50 elements, inclusive.
+<li>Each element of votes will be between 1 and 1000, inclusive.
+</ul>
+
+<h1>Examples</h1>
+<pre>
+0)
+
+{253, 253, 253, 241}
+Returns: 1
+The percentages are {25.3, 25.3, 25.3, 24.1}. If we round all the percentages down, the sum will be equal to 25 + 25 + 25 + 24 = 99. Therefore, one of the percentages must be rounded up.
+1)
+
+{2, 3}
+Returns: 0
+The raw percentages are 40.0 and 60.0. They are already integers.
+2)
+
+{500, 500}
+Returns: 0
+The raw percentages are 50.0 and 50.0. They are already integers.
+3)
+
+{1,2,3,4,5}
+Returns: 2
+
+4)
+
+{1000}
+Returns: 0
+
+5)
+
+{2,3,5,7,11,13,2,4,8,16}
+Returns: 5
+</pre>
+
+<p>This problem statement is the exclusive and proprietary property of <a href="http://www.topcoder.com/tc">TopCoder</a>, Inc. Any unauthorized use or reproduction of this information without the prior written consent of TopCoder, Inc. is strictly prohibited. (c)2003, TopCoder, Inc. All rights reserved.</p>

@@ -1,0 +1,61 @@
+<h1>Problem Statement</h1>
+
+<p>Several students will take an exam in a narrow and long room. Each student's position is his coordinate on an axis that goes from one end of the room to the other. The students' positions are given in the int[] position. Two students can talk if the distance between them is less than or equal to maxDistance. The teacher wants to give one question to each student. He must distribute the questions such that no two students who can talk to each other will have the same question. Return the minimum number of different questions the teacher must have to make this possible.</p>
+
+<h1>Definition</h1>
+<pre>
+Class:              ExamQuestions
+Method:             leastAmount
+Parameters:         int[], int
+Returns:            int
+Method signature:   int leastAmount(int[] position, int maxDistance)
+(be sure your method is public)
+</pre>
+
+<h1>Constraints</h1>
+<ul>
+<li>position will contain between 1 and 50 elements, inclusive.
+<li>Each element of position will be between 0 and 1000, inclusive.
+<li>maxDistance will be between 0 and 1000, inclusive.
+</ul>
+
+<h1>Examples</h1>
+<pre>
+0)
+
+{1, 10, 11, 4}
+2
+Returns: 2
+The teacher can give question 0 to students 0 and 1, and question 1 to students 2 and 3.
+1)
+
+{1, 2, 3, 4, 5}
+1
+Returns: 2
+The teacher must alternate the two questions.
+2)
+
+{4, 6, 3, 3}
+0
+Returns: 2
+Some students may have equal positions.
+3)
+
+{12, 13, 17, 0, 5, 14, 6, 7, 16, 4}
+3
+Returns: 4
+
+4)
+
+{12, 13, 17, 0, 5, 14, 6, 7, 16, 4}
+5
+Returns: 5
+
+5)
+
+{6,8,12,14,1,18,8,5,13,9,20,12,1,22,19,19,14,0,23,6,24,18,9,16,13,9,15,23,22}
+10
+Returns: 15
+</pre>
+
+<p>This problem statement is the exclusive and proprietary property of <a href="http://www.topcoder.com/tc">TopCoder</a>, Inc. Any unauthorized use or reproduction of this information without the prior written consent of TopCoder, Inc. is strictly prohibited. (c)2003, TopCoder, Inc. All rights reserved.</p>

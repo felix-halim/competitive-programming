@@ -1,0 +1,61 @@
+
+Problem Statement
+    
+A sequence of integers
+	(a1, a2, a3, ..., an) 
+is called arithmetic if a2 - a1 = a3 - a2 = a4 - a3 = ... In order to make the given sequence arithmetic, you are allowed to replace each element with a different integer value (no fractions allowed). Unfortunately, each such replacement has an associated cost of 1. Return the minimum cost required to make the given sequence arithmetic. If the given sequence is already arithmetic, return 0.
+Definition
+    
+Class:
+ArithmeticReplace
+Method:
+howMany
+Parameters:
+int[]
+Returns:
+int
+Method signature:
+int howMany(int[] seq)
+(be sure your method is public)
+    
+
+Notes
+-
+An element can be replaced by a value less than -10000 or greater than 10000.
+Constraints
+-
+seq will contain between 3 and 50 elements inclusive.
+-
+Each element of seq will be between -10000 and 10000 inclusive.
+Examples
+0)
+
+    
+{1,4,7,11}
+Returns: 1
+Replacing the 11 with a 10 we get an arithmetic sequence.
+1)
+
+    
+{-10,-5,0,5,10,15}
+Returns: 0
+This sequence is already arithmetic.
+2)
+
+    
+{157, 119, 15, -5, -25}
+Returns: 2
+Replacing the first two elements with 55 and 35 we get an arithmetic sequence.
+3)
+
+    
+{1,2,4,7,11,16,22,29,37,46,56,67,79,92,106}
+Returns: 13
+
+4)
+
+    
+{1,100,10,40,2,200,-71,250,99,103,325}
+Returns: 7
+
+This problem statement is the exclusive and proprietary property of TopCoder, Inc. Any unauthorized use or reproduction of this information without the prior written consent of TopCoder, Inc. is strictly prohibited. (c)2003, TopCoder, Inc. All rights reserved.

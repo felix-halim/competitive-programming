@@ -1,0 +1,59 @@
+
+Problem Statement
+    
+You work for a company that sells mechanical bit counting devices. These devices wear out when they do a lot of counting. You are going to see how much wear has been put on one particular 15-bit binary counter. One unit of wear occurs for every bit that is flipped in the counter. For example:
+If the counter was at     7 = 000000000000111 
+And it was incremented to 8 = 000000000001000
+Then 4 bits are flipped so 4 units of wear would occur. If a counter was incremented through an inclusive range like 7 -> 12 then :
+Starts at 7 = 000000000000111 
+Goes to   8 = 000000000001000   7 -> 8 = 4 units of wear
+Goes to   9 = 000000000001001   8 -> 9 = 1 unit of wear
+Goes to  10 = 000000000001010   9 -> 10 = 2 units of wear
+Goes to  11 = 000000000001011   10 -> 11 = 1 unit of wear
+Goes to  12 = 000000000001100   11 -> 12 = 3 units of wear
+This causes a total of 4+1+2+1+3 = 11 units of wear. Return the total wear caused by incrementing the counter through the inclusive range between start and finish.
+Definition
+    
+Class:
+MechanicalCounter
+Method:
+amountWear
+Parameters:
+int, int
+Returns:
+int
+Method signature:
+int amountWear(int start, int finish)
+(be sure your method is public)
+    
+
+Constraints
+-
+start will be less than finish.
+-
+start will be between 0 and 32766 inclusive.
+-
+finish will be between 1 and 32767 inclusive.
+Examples
+0)
+
+    
+7
+8
+Returns: 4
+As seen above, 4 units of wear occur when 7 becomes 8.
+1)
+
+    
+7
+12
+Returns: 11
+The example in the problem statement.
+2)
+
+    
+1
+32767
+Returns: 65518
+
+This problem statement is the exclusive and proprietary property of TopCoder, Inc. Any unauthorized use or reproduction of this information without the prior written consent of TopCoder, Inc. is strictly prohibited. (c)2003, TopCoder, Inc. All rights reserved.
