@@ -1,0 +1,696 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>ACM ICPC Regional Singapore 2007 :: Felix Halim .NET</title>
+  <meta name="author" content="Felix Halim">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/x-icon" href="/images/fh.jpg">
+  <link rel="stylesheet" type="text/css" href="/styles.css">
+  <script src="/script.js"></script>
+</head>
+
+<body>
+<script>document.write(toolbar_template());</script>
+
+<h1>ACM ICPC Regional Singapore 2007</h1>
+
+<p>This is the first time NUS (National University of Singapore) host an ACM ICPC Regional. 
+Singapore is a very strategic place for Asian teams because of free VISA (for ASEAN) and many direct planes to Singapore are available. 
+This attracted many great teams all over Asia to join regional Singapore which made Regional Singapore one of the toughest Regional in Asia.
+The surprise prize for the champion team of this regional is 3 Lenovo (each worth around 3000 SGD)! This is a very attractive prize!!
+I'm sure the next 4 years (when NUS host the ACM ICPC Regional again), there'll be even more teams join Regional Singapore merely to get the prizes.
+</p>
+
+<p>This time I represent NUS instead of BINUS UNIVERSITY.
+My team name is TOKIERS 020606 which consist of 3 TOKI (Tim Olimpiade Komputer Indonesia) members:
+<ol>
+<li> <b>Felix Halim</b>, it's me from TOKI 2002 (Computer Science post-grad, first year).
+<li> <b>Aditya Kristanto Goenawan</b>, from TOKI 2006 (Engineering under-grad, first year). 
+<li> <b>Daniel Aris Pandu Prasetia</b>, from TOKI 2006 (Engineering under-grad, first year).
+</ol>
+FYI, <a href="http://www.toki.or.id/">TOKI</a> is a government organization from Indonesia that manage, train, and select
+four Indonesian high-school students to be sent to <a href="http://olympiads.win.tue.nl/ioi/">
+IOI (International Olympiads in Informatics)</a> contest every year.
+Surprisingly, there were a lot of TOKI alumnis (total 18 person) joined this year Singapore Regional contest.
+It's like a reunion of TOKI-ers :) If we count the total number of Indonesian contestants, it's is even greater:
+6 universities from Indonesia (BINUS, ITB, Parahyangan, UI, USU, Telkom) + 1 from NUS (TOKIERS 020606) + 1 team from NTU (Ivory Gull), and 
+several other teams also contains Indonesian contestant. 
+
+<!--
+BINUS UNIVERSITY
+National University of Singapore
+Nanyang Technological University
+Institut Teknologi Bandung
+Parahyangan University
+Universitas Indonesia
+University of Sumatera Utara
+Sekolah Tinggi Teknologi Telkom
+-->
+
+Indonesian students are getting better and better in algorithm skills.
+</p>
+
+<p align="center">
+<img align="center" src="tokiers.jpg"><br>
+Left to Right: Aditya KG, Daniel APP, and Felix Halim
+</p>
+
+<h1>Registration and Practice Session - December 13, 2007</h1>
+
+<p>My brother, <a href="http://www.comp.nus.edu.sg/~stevenha/">Steven Halim</a>, is one of the Registration committee for this event. He is the one who gave you the ICPC Bag, T-Shirt, Name Tag, etc. So I think every team should've met my brother :). Since NUS were short in number of committee, the Registration committees ended up being "any" committee which took care of almost anything :(. They worked really hard to make this event sucessful. Thanks to them.
+</p>
+
+<p>After registration, the 47 teams (except JiLin University who didn't manage to come due to VISA problem) went to the practice room. A bottleneck happened during the move so the practice session was delayed a bit. In this practice session, there were 3 easy problems given. However the last one is troublesome. My team and several other teams didn't manage to get it Accepted! The reason is the scanf problem.
+Those who used scanf("%d\n",&n) to read the number of testcases will never get this problem Accepted. Examine a C code below:
+
+<pre style="background-color:lightgrey">
+#include &lt;stdio.h>
+
+char s[1000];
+int n;
+
+int main(){
+    scanf("%d\n",&n);
+    for (int i=0; i&lt;n; i++){
+        gets(s);
+        
+        // process s here... 
+        puts(s);
+    }
+}
+</pre>
+
+If the input is something like:
+
+<pre style="background-color:lightgrey">
+3
+
+felix
+halim
+</pre>
+
+Then the output is surprisingly wrong:
+
+<pre style="background-color:lightgrey">
+felix
+halim
+halim
+</pre>
+
+The "\n" in scanf actually read two new lines! This is something unexpected.
+This is a lesson to never use scanf("%d\n", ...) if the input can be a blank line!
+There are several teams got trapped with this kind of thing including mine.
+Other than this issue, the rest of the practice session went smoothly.
+</p>
+
+<h1>ACM ICPC Regional Singapore - December 14, 2007</h1>
+
+<p>The contest starts at 8:30am and ends at 1:30pm.
+I got there Just in Time<sup>TM</sup> :D
+to give a little excitement to the other teams.
+They thought I wouldn't come because probably I joined the last night SRM and was too tired to get up in the morning
+but then I dissapointed them by showing my face, hihihi.
+Whereas the fact is: I woke up late :P, causing panic to my own team :P (sori Daniel, Aditya)</p>
+
+<p>Then the contest starts. As usual, I coded the template REP, FOR, using std, etc... just like
+<a href="http://www.topcoder.com/tc">TopCoder style</a> (see my code below). Then the fun begins!
+The 7 problem statements of this regional contest can be found <a href="problemset.pdf">here</a>.
+</p>
+
+<h2>Problem A - MODEX (Accepted in minute 7)</h2>
+<p>When I started reading, Aditya KG asked me if I know something about big-mod and pointed me to Problem A.
+With years of experience, looking at the big-mod was like going back to childhood :P. With no further ado, 
+I coded and submit it. It's not a surprise that the other teams also get this problem accepted very quick.
+</p>
+
+<p>The problem asked to compute x^y mod n. Where y can be as large as 2^31 - 1.
+The must-know-rule of big mod is: <b>(a*b) mod c</b> is equal to <b>((a mod c) * (b mod c)) mod c</b>.
+The solution is to divide the <b>y</b> into two until it reaches the base case of y = 0. Then
+construct the solution based on the result of the smaller y. The dynamic programming goes like this:
+<br><br>
+x^y mod n is equal to
+<ul>
+<li>1 (one) if y is equal to 0 (zero)
+<li>((x^(y/2) mod n) * (x^(y/2) mod n)) mod n, if y is even
+<li>((x^(y div 2) mod n) * (x^(y div 2) mod n) * x) mod n, if y is odd (where div is an integer division)
+</ul>
+The C code is as follows:
+<pre name="codes" style="background-color:lightgrey">
+#include &lt;stdio.h>
+
+int pow(int x, int y, int n){
+    if (y==0) return 1;
+    int t = pow(x,y/2,n);
+    if (y%2==0) return (t*t) % n;
+    return (((t*t)%n) * x) % n;
+}
+
+int main(){
+    int nTC, x,y,n;
+
+    scanf("%d",&nTC);
+    while (nTC--){
+        scanf("%d %d %d",&x,&y,&n);
+        printf("%d\n",pow(x,y,n));
+    }
+}
+</pre>
+What's intriguing about this problem is that, if you use Java, you can just use the BigInteger class! (Randy Sugianto told me this)
+<pre name="codes" style="background-color:lightgrey">
+import java.util.*;
+import java.math.*;
+import java.io.*;
+
+public class A {
+    public static void main(String[] args) throws IOException {
+        Scanner scan = new Scanner(System.in);
+        int nTC = scan.nextInt();
+        while (nTC-- > 0){
+            BigInteger x = BigInteger.valueOf(scan.nextInt());
+            BigInteger y = BigInteger.valueOf(scan.nextInt());
+            BigInteger n = BigInteger.valueOf(scan.nextInt());
+            BigInteger z = x.modPow(y,n); // look ma, it's in the library ;)
+            System.out.println( z );
+        }
+    }
+}
+</pre>
+Problem A was supposed to be a super bonus problem.
+</p>
+
+
+<h2>Problem C - ACORN (Accepted in minute 56)</h2>
+
+<p>Another DP (Dynamic Programming) problem. Hmm... It's really strange that this kind of problem is now 
+becomes not interesting anymore. In early days when I was just starting to learn programming,
+I always thought that Dynamic Programming problems are hard, but nowdays these kind of problem
+starts to lose it's value. It's already becomes an easy-standard problems. Once you know the
+trick, the rest is just coding skills.
+</p>
+
+<p>As we all know we have two ways to do DP: bottom-up and top-down.
+The bottom-up DP can save memory and more efficient but the code is not intuitive sometimes.
+The top-down DP is very easy to code (intuitive) but takes up more memory and run time.
+The code for both kinds of DP is presented below.</p>
+
+<p>The problem is like this:
+There are <b>t</b> trees with the same height <b>h</b>. There are acorns distributed in different 
+heights of any tree. A squirrel is currently at the top of a tree and want to go down and collect
+as many acorns as possible. The squirrel can choose to go down one step from height x to height x-1
+or it can choose to fly to another tree from height x to height x-f (f is given).
+The question is what is the maximum number of acorns the squirrel can collect?
+</p>
+
+<p>This is the bottom-up DP version:
+
+<pre name="codes" style="background-color:#DDDDDD">
+#include &lt;stdio.h>
+#include &lt;string.h>
+
+#define REP(i,n) for (int i=0,_n=(n); i&lt;_n; i++)
+#define FORD(i,a,b) for (int i=(a),_b=(b); i>=_b; i--)
+
+#define MAXN 2007
+
+int dp[MAXN];
+int tree[MAXN][MAXN];
+int t,h,f,a,n,nTC;
+
+int main(){
+    scanf("%d",&nTC);
+    while(nTC--){
+        memset(dp,0,sizeof(dp));
+        memset(tree,0,sizeof(tree));
+
+        scanf("%d %d %d",&t,&h,&f);
+        REP(i,t){
+            scanf("%d",&a);
+            REP(j,a){
+                scanf("%d",&n);
+                tree[i][n]++;
+            }
+        }
+
+        FORD(i,h,1) REP(j,t){
+            int best = tree[j][i+1]; // don't jump
+            best >?= dp[i+f];        // jump
+            best += tree[j][i];      // add current
+            tree[j][i] = best;       // update
+            dp[i] >?= best;          // update
+        }
+        printf("%d\n",dp[1]);   
+    }   
+}
+</pre>
+</p>
+
+<p>This is the top-down DP version:
+
+<pre name="codes" style="background-color:#DDDDDD">
+#include &lt;stdio.h>
+#include &lt;string.h>
+
+#define REP(i,n) for (int i=0,_n=(n); i&lt;_n; i++)
+
+#define MAXN 2001
+
+int memo[MAXN][MAXN];
+int tree[MAXN][MAXN];
+int t,h,f,a,n,nTC;
+
+int rec(int hi, int ti){
+    if (hi>=h) return 0;
+    int &ret = memo[hi][ti];
+    if (ret!=-1) return ret;
+    ret = tree[ti][hi] + rec(hi+1,ti);              // don't jump
+    REP(i,t) ret >?= tree[ti][hi] + rec(hi+f, i);   // jump
+    return ret;
+}
+
+int main(){
+    scanf("%d",&nTC);
+    while(nTC--){
+        memset(memo,-1,sizeof(memo));
+        memset(tree,0,sizeof(tree));
+
+        scanf("%d %d %d",&t,&h,&f);
+        REP(i,t){
+            scanf("%d",&a);
+            REP(j,a){
+                scanf("%d",&n);
+                tree[i][n-1]++;
+            }
+        }
+
+        int res = 0;
+        REP(i,t) res >?= rec(0,i);
+        printf("%d\n",res);
+    }
+}
+</pre>
+
+Daniel coded this problem using bottom-up dynamic programming and got it accepted in the first try.
+</p>
+
+<h2>Problem B - JONES (Accepted in minute 102, penalty 5 x 20)</h2>
+
+<p>
+IIRC, Aditya KG was doing problem F and I was doing problem G while Daniel was looking for another problem.
+The ranklist at this time is not good :(
+Our team solved 2 problems while more than ten other teams solved 3+ problems.
+What made me hot was that YoiMon was above us! This team should not be allowed to go any further!! :P
+</p>
+
+<p>Problem G was also a typical problem: given a simple graph,
+you must select and remove a set of edges from the graph
+such that the graph has no cycle in it and the total weight of the removed edges is minimum.
+I thought problem G can be solved using greedy by finding the smallest edge (smallest weight)
+and check whether it is possible to create a cycle using that edge (using DFS).
+If can then I can just remove that edge and find the second smallest edge and so on.
+When I submit it, I got Wrong Answer. I was quite sure that this should work.
+Many teams already got this problem accepted, I was quite frustrated and decided to try the other problem.</p>
+
+<p>Then Aditya KG took over the keyboard to code problem F while I'm hunting for another problem.
+Problem B (Jones) got my attention. By this time, Aditya KG had submit problem F several times
+but keep getting Wrong Answer.</p>
+
+<p>Problem B is about Indiana Jones want to cross a river by hopping through stones.
+Each stones can sink at certain interval and can resurface in another interval or stand still.
+The exact interval of the sink/resurface is given. The question is what is the earliest
+time Indiana Jones can reach the other side of the river by jumping through these "magic" stones.</p>
+
+<p>Problem B seemed too simple at the beginning and I was underestimating the problem.
+I thought the solution was just a simple DP (again):
+The Indiana Jones can jump forward to the next stone anytime he can or 
+wait for the next stone to resurface (if it's currently sinking) and choose the best outcome.
+I robbed the keyboard and coded simple top-down DP "in no time" and then submit it
+(when I said "in no time", it actually consumes about 5 to 15 minutes :P).
+Then gave the keyboard back to Aditya KG as if Problem B already accepted, hehe :P.
+</p>
+
+<p>To my surprise, my solution for problem B got Wrong Answer. I was too confident.
+When I printed the code, I realized that my code is totaly wrong: the variable name was switched (doh!).
+I fixed it and resubmit. Those of you who know the solution should know already that this submission will also get Wrong Answer.
+My algorithm was missing something important.
+That is: Indiana Jones can also <b>jump back</b> to the previous stones besides waiting or jumping forward.
+Realizing this mistake, I slipped in a few lines of code to the top-down DP to allow Indiana Jones to jump backward,
+and resubmit. At this time, the code was having too many patches and got Wrong Answer again :(.
+During this time, I bothered Aditya KG several times when he coded problem F. 
+Maybe this is the reason he couldn't get problem F accepted :D, sorry Aditya.
+I calmed myself, and start to simplify Problem B code, resubmit and got it accepted at last.
+This is the code:
+
+<pre name="codes" style="background-color:#DDDDDD">
+#include &lt;stdio.h>
+#include &lt;string.h>
+
+#define REP(i,n) for (int i=0,_n=(n); i&lt;_n; i++)
+#define FOR(i,a,b) for (int i=(a),_b=(b); i&lt;=_b; i++)
+
+int nTC,s,t;
+char con[550][550], temp[10];
+int memo[550][550];
+
+int rec(int time, int idx){
+    if (idx==s) return time;
+    if (time>=t) return 1000;
+    int &ret = memo[time][idx];
+    if (ret!=-1) return ret; else ret = 1000;
+    if (con[time][idx]==0) return ret;
+    
+    FOR(i,time,t-1){
+        if (con[i][idx]==0) break;
+        if (con[i][idx+1]) ret &lt;?= rec(i+1, idx+1);
+        if (idx>0 && con[i][idx-1]) ret &lt;?= rec(i+1, idx-1);
+    }
+    return ret;
+}
+
+int main(){
+    scanf("%d",&nTC);
+    while (nTC--){
+        scanf("%d %d",&s,&t);
+        memset(con,0,sizeof(con));
+        REP(i,t){
+            REP(j,s){
+                scanf("%s",temp);
+                con[i][j] = temp[0];
+            }
+            con[i][s] = 1;
+        }
+        REP(i,s){
+            int c = 1;
+            REP(j,t){
+                if (con[j][i]=='u'){
+                    con[j][i] = c;
+                } else if (con[j][i]=='r'){
+                    con[j][i] = c = 1;
+                } else {
+                    con[j][i] = c = 0;
+                }
+            }
+        }
+        con[t][s] = 1;
+
+        memset(memo,-1,sizeof(memo));
+        int res = 1000;
+        REP(i,t-1) if (con[i][0]) res &lt;?= rec(i+1,0);
+        if (res>=1000) puts("-1");
+        else printf("%d\n",res);
+    }
+}
+</pre>
+</p>
+
+<h2>Problem F - USHER (Accepted in minute 129, penalty 3 x 20)</h2>
+
+<p>The ranklist at this point was also not good, no need to tell the details (I'm embarrassed :P).
+Feeling guilty to Aditya which keyboard got robbed by me several times, 
+I decided to rob his problem as well (how cruel me!!) since I didn't have clue for other problems yet.
+I asked Daniel to re-explain the problem F again. He explained to me:
+There is a box which can be inserted up to certain amount of dollar coins in it.
+This box is passed from the usher to several parishioners and the parishioners can add
+certain amout of dollar in it and pass it back to usher or other parishioners and so on.
+The box passing stops when the box is full of coins.
+Every time the usher get the box, he will remove one coin,
+add it to his pocket and the passing continues. Usher never add coin to the box.
+The question is what is the maximum number of coins the usher can get?
+</p>
+
+<p>Floyd Warshall algorithm immediatelly popped out from my mind (FYI, it's another DP algorithm).
+That is, just find the minimum cost cycle from usher to parishoioners and back to the usher again.
+The result is the box capacity divided by the cycle cost.
+I immediatelly coded it "in no time" again and submit it.
+I had a feeling that simple division wouldn't work but Daniel was fine-fine aja with that so I submit it anyway.
+It's my fault that I didn't tell Daniel my doubt :(. 
+After got Wrong Answer, Daniel then remembered that he forgot to tell me that after dividing the box capacity with 
+the shortest cycle length (or cost), we need to calculate again the possibility of having more cycle
+(because the usher removed a coin). Thus, the usher may end up having more coins. 
+Aditya KG already have the formula to calculate this, I can just use his, resubmit and got it accepted.
+It was just a slight error, anyway, good work Aditya and Daniel.
+Below is our code for problem F:
+
+<pre name="codes" style="background-color:#DDDDDD">
+#include &lt;stdio.h>
+#include &lt;string.h>
+
+#define REP(i,n) for (int i=0,_n=(n); i&lt;_n; i++)
+#define FOR(i,a,b) for (int i=(a),_b=(b); i&lt;=_b; i++)
+
+int nTC, cost, n, box, con[510][510], nr, a,b;
+
+int main(){
+    scanf("%d",&nTC);
+    while (nTC--){
+        scanf("%d %d",&box,&n); n++;
+
+        memset(con,-1,sizeof(con));
+
+        scanf("%d",&nr);
+        REP(i,nr){
+            scanf("%d",&b);
+            con[0][b] = 0;
+        }
+        
+        FOR(i,1,n-1){
+            scanf("%d",&nr);
+            REP(j,nr){
+                scanf("%d %d",&a,&b);
+                if (con[i][b]==-1 || a&lt;con[i][b]) con[i][b] = a;
+            }
+        }
+        
+        // Floyd Warshall
+        REP(k,n) REP(i,n) if (con[i][k]!=-1)
+            REP(j,n) if (con[k][j]!=-1){
+                if (con[i][j]==-1 || con[i][j] > con[i][k] + con[k][j])
+                    con[i][j] = con[i][k] + con[k][j];
+            }
+        
+        int cycleLen = 1000000000;  
+        FOR(i,1,n-1) if (con[0][i]!=-1 && con[i][0]!=-1)
+            cycleLen &lt;?= con[0][i] + con[i][0];
+
+        // Aditya KG's formula
+        cycleLen--;
+        int tot = box/cycleLen;
+        while ((tot*cycleLen) + cycleLen+1 >= box) tot--;
+        printf("%d\n",tot+1);
+    }
+}
+</pre>
+</p>
+
+<h2>Problem G - RACING (Accepted in minute 164, penalty 1 x 20)</h2>
+
+<p>This time, our team was still below YoiMon but we have the same number of solved problems :).
+However the rank was still bad enough, we need to solve more problems to get to the top 10.</p>
+
+<p>Fortunately, out of the blue, Daniel mentioned something about Minimum Spanning Tree for problem G.
+When I think about it again, the algorithm seemed fit to the problem!
+Since we need to remove the cycles from the graph by removing edges, this description is like
+creating a <b>tree</b>. When I think about what the tree should look like, it "clicks" with the Maximum Spanning Tree.
+Knowing this, coded problem G, again, "in no time", submit it and got it accepted, Yatta!!
+At least there wass some period of time where TOKIERS 020606 managed to surpass YoiMon :D
+Below is our code for problem G:
+
+<pre name="codes" style="background-color:#DDDDDD">
+#include &lt;stdio.h>
+#include &lt;string.h>
+#include &lt;vector>
+#include &lt;algorithm>
+
+using namespace std;
+
+#define REP(i,n) for (int i=0,_n=(n); i&lt;_n; i++)
+#define FOR(i,a,b) for (int i=(a),_b=(b); i&lt;=_b; i++)
+
+#define MAXN 10010
+
+// Union-Set algorithm
+int pset[MAXN];
+void initset(){ REP(i,MAXN) pset[i] = i; }
+int findSet(int i){ return (pset[i]==i)? i: (pset[i] = findSet(pset[i])); }
+void merge(int i, int j){ pset[findSet(i)] = findSet(j); }
+int sameSet(int i, int j){ return findSet(i)==findSet(j); }
+
+int nTC,n,m;
+char vis[MAXN];
+
+int main(){
+    scanf("%d",&nTC);
+    while (nTC--){
+        scanf("%d %d",&n,&m);
+        vector&lt;pair&lt;int,pair&lt;int,int> > > junc;
+        REP(i,m){
+            int a,b,c;
+            scanf("%d %d %d",&a,&b,&c); a--; b--;
+            junc.push_back(make_pair(c,make_pair(a,b)));
+        }
+
+        // sort edges descending by weight
+        sort(junc.rbegin(), junc.rend());
+
+        // Maximum Spanning Tree
+        memset(vis,0,sizeof(vis));
+        initset();
+        int res = 0;
+        REP(i,junc.size()){
+            int a = junc[i].second.first;
+            int b = junc[i].second.second;
+            int c = junc[i].first;
+            if (sameSet(a,b)) res += c;
+            else merge(a,b);
+        }
+        printf("%d\n",res);
+    }
+}
+</pre>
+</p>
+
+<h2>The rest of the contest</h2>
+
+<p>I already found the algorithm for problem D which runs in O(n^2 log n) also problem E which is kind of gambling (unsure if my algo will pass the time limit). The remaining time is about 1 hour and 20 minutes, I decided to go with problem D and told Aditya and Daniel to think of faster algorithm for problem E.</p>
+
+<p>It turned out to be a bad idea, problem D is quite hard to implement and I got bugs in the code I couldn't find :(, now it's 30 minutes left, the ranklist was freezed. This was really a problematic situation. If I recoded problem D, it won't finish in time. Aditya and Daniel couldn't find faster algorithm for problem E either. So I focused on problem D but still didn't managed to pass the sample case :(. I guess this is the end of our strength.</p>
+
+<p align="center">
+<img src="tokiers in action 1.jpg">
+<img src="tokiers in action 2.jpg">
+<br>
+TOKIERS 020606 in Action!
+</p>
+
+<h1>After contest</h1>
+
+<p>Many teams asked me what's wrong with their solution for Problem B. Why they got so many Wrong Answers. They asked me what was the tricky case? I was surprised since I didn't find any tricky case for Problem B. I got WA previously because my algo and code was wrong and there were so many changes before I got it accepted. So I couldn't remember which one I changed to make it accepted. When I looked at the standings, the top teams also didn't manage to get it accepted and there were exceptionaly so many Wrong Answers on problem B! I suspect there is something fishy about this problem. Maybe there is an unwritten boundary case? But why some of the team got it accepted? The judges at that time concluded that the judge output was correct. Nobody could figure out what's wrong with Problem B.</p>
+
+<p>After having lunch and city tour in the afternoon, the award ceremony begins. Only the top 5 teams got awards. The award ceremony was merged with the other three SoC competitions. This made ACM ICPC Singapore looked a lot less prestigious (seemed only a small part of SoC event). It was funny to see high-schoolers and middle-schoolers came up from nowhere, got awarded then paired with the champion team of ACM ICPC. We were totaly un-aware of those competitions and it felt awkward. Anyway, below is <a href="http://icpc.baylor.edu/icpc/regionals/ViewRegionalStandings.asp?ContestID=880">the official standings</a>.
+The light-green-ed teams contain Indonesian contestants.
+
+<table align="center" border="1" cellspacing="0" cellpadding="3">
+<tr><th>Rank<th>University Name<th>Team Name<th>Citation<th># Solved<th>Time
+<tr><td>1<td>Shanghai Jiao Tong University<td>Prime<td>First Place<td>7<td>569
+<tr><td>2<td>Zhejiang University<td>Othello<td>Second Place<td>7<td>641
+<tr><td>3<td>Shanghai Jiao Tong University<td>Sofasquad<td>Third Place<td>6<td>470
+<tr><td>3<td>Peking University<td>Excalibur<td>Third Place<td>6<td>603
+<tr><td>4<td>Zhongshan(Sun Yat-sen) University<td>ZSU_Phecda<td>Fourth Place<td>6<td>650
+<tr><td>5<td>Fudan University<td>Metaphor<td>Fifth Place<td>6<td>757
+<tr bgcolor="lightgreen"><td>5<td>BINUS UNIVERSITY<td>YoiMon<td>Fitth Place<td>6<td>765
+<tr><td>5<td>National Tsing Hua University<td>B.F.W<td>Fifth Place<td>6<td>1044
+<tr bgcolor="lightgreen"><td>8<td>Nanyang Technological University<td>NTU Ivory Gull<td>Eighth Place<td>5<td>328
+<tr><td>8<td>Taiwan University<td>rand N-SAT<td>Eighth Place<td>5<td>379
+<tr><td>8<td>Nanyang Technological University<td>Nanyang Eagles<td>Eighth Place<td>5<td>607
+<tr bgcolor="lightgreen" style="font-weight:bold"><td>8<td>National University of Singapore<td>TOKIERS 020606<td>Eighth Place<td>5<td>812
+<tr bgcolor="lightgreen"><td>9<td>Institut Teknologi Bandung<td>Ganesha ITB<td>Ninth Place<td>5<td>813
+<tr><td>9<td>University of the Philippines Diliman<td>UP Fighting Morons<td>Ninth Place<td>5<td>854
+<tr><td>9<td>Shanghai University<td>Larva<td>Ninth Place<td>5<td>871
+<tr><td>10<td>Saitama University<td>Maximum-Coffee<td>Tenth Place<td>5<td>925
+<tr><td>10<td>Saitama University<td>Maximum_TGM<td>Tenth Place<td>5<td>934
+<tr><td>11<td>National University of Singapore<td>12TIN@NUS<td>Eleventh Place<td>5<td>1046
+<tr><td>13<td>National University of Singapore<td>eagle<td>Thirteenth Place<td>4<td>382
+<tr><td>14<td>National University of Singapore<td>Code Warrior<td>Fourteenth Place<td>4<td>488
+<tr><td>14<td>Nanyang Technological University<td>KhAN<td>Fourteenth Place<td>4<td>664
+<tr><td>15<td>Nanyang Technological University<td>Y2F<td>Fifteenth Place<td>4<td>718
+<tr><td>15<td>National University of Singapore<td>NUSSOC<td>Fifteenth Place<td>4<td>719
+<tr><td>15<td>Nanyang Technological University<td>GeJe<td>Fifteenth Place<td>4<td>778
+<tr bgcolor="lightgreen"><td>15<td>BINUS UNIVERSITY<td>ACMon<td>Fifteenth Place<td>4<td>847
+<tr><td>15<td>City University of Hong Kong<td>9.99 Accepted<td>Fifteenth Place<td>3<td>219
+<tr bgcolor="lightgreen"><td>15<td>Nanyang Technological University<td>HiWorld<td>Fifteenth Place<td>3<td>234
+<tr><td>15<td>National Tsing Hua University<td>ROH<td>Fifteenth Place<td>3<td>369
+<tr><td>15<td>Kasetsart University, Thailand<td>T2B<td>Fifteenth Place<td>3<td>385
+<tr><td>16<td>Nanyang Technological University<td>TMNQ<td>Sixteenth Place<td>3<td>393
+<tr><td>16<td>International Islamic University Malaysia<td>Al-Khawarizmi<td>Sixteenth Place<td>3<td>440
+<tr bgcolor="lightgreen"><td>16<td>Parahyangan University<td>H&&H<td>Sixteenth Place<td>3<td>495
+<tr><td>17<td>Soongsil University<td>Inspirations<td>Seventeenth Place<td>3<td>525
+<tr bgcolor="lightgreen"><td>18<td>Universitas Indonesia<td>Makara<td>Eighteenth Place<td>3<td>532
+<tr bgcolor="lightgreen"><td>21<td>University of Sumatera Utara<td>USU - The Last One<td>Twenty-first Place<td>2<td>84
+<tr><td>22<td>National Chiao Tung University<td>Freshfox<td>Twenty-second Place<td>2<td>168
+<tr bgcolor="lightgreen"><td>23<td>Parahyangan University<td>KiWiChan<td>Twenty-third Place<td>2<td>307
+<tr><td><td>Ateneo de Manila University<td>cxxC<td>Honorable Mention<td><td>
+<tr bgcolor="lightgreen"><td><td>Informatics Education<td>Polymorphic<td>Honorable Mention<td><td>
+<tr bgcolor="lightgreen"><td><td>University of Sumatera Utara<td>USU - The Last Two<td>Honorable Mention<td><td>
+<tr bgcolor="lightgreen"><td><td>National University of Singapore<td>Coding Bunnies<td>Honorable Mention<td><td>
+<tr><td><td>Soongsil University<td>NewFace<td>Honorable Mention<td><td>
+<tr><td><td>Multimedia University, Malaysia<td>!<td>Honorable Mention<td><td>
+<tr><td><td>Nanyang Technological University<td>CODE BREAKERS<td>Honorable Mention<td><td>
+<tr><td><td>Multimedia University, Malaysia<td>Infinity<td>Honorable Mention<td><td>
+<tr><td><td>Prince of Songkla University<td>PSU-PKT<td>Honorable Mention<td><td>
+<tr bgcolor="lightgreen"><td><td>Sekolah Tinggi Teknologi Telkom<td>STT01<td>Honorable Mention<td><td>
+</table>
+</p>
+
+<h1>The truth about Problem B weirdness</h1>
+
+<p>The judge reference solution was wrong. The reference solution assumed that Indiana Jones cannot jump at Interval 0 (zero).
+Thus for a certain testcase which has a possible path using Interval 0 (zero), the reference solution won't select that path.
+The judges should've suspect something fishy when the top teams which can get a problem accepted in a single submission, 
+got this problem wrong for more than 10 submissions! 
+</p>
+
+<p>As the result, few days after the contest was over, all the solutions submitted for Problem B was re-judged
+and the ranklist was updated. The above ranklist is the latest and final one. This is a very common problem
+in programming contests. Even in ACM ICPC World Finals, this kind of mistakes still happened.
+The best way to deal with this problem is that the judges must be aware of fishy problems during the contest.
+For example by examining the source codes of the contestants, not only by looking at their output only.
+It's possible that their code will give hints to find out the problems (especialy top teams codes!).
+</p>
+
+<p>However, if the judges didn't manage find the mistakes during the contest time and after the award ceremony...
+Then there are two choices to remedy this problem: Leave the standing as if there was no problem and decide it's final or 
+keep trying to find out the fishy problem and try to fix (if possible, re-judge) and annouce it to the contestants.
+I'm happy that NUS Contest Director chose the latter. The changes of the standings will impact on the wild-card decision
+later on (which is crucial for some top teams).</p>
+
+<p>Looking at the changes of the standings, I can tell that the re-judge was done by removing the 
+test-cases which contains Interval 0 (zero) solution. By removing test-cases which solutions involving
+Interval 0 (zero), this will Accept both solutions that consider or not consider Interval 0 (zero).
+In other words, those teams who already got Accepted will still remain get Accepted and those teams
+that got Wrong Answer may get Accepted after it's re-judged.</p>
+
+<h1>My comment about the contest</h1>
+
+<p>Other than the Problem B issue, I enjoyed the ACM ICPC Singapore since I can meet the other Indonesian coders and have fun with them.
+The problem set in overall was very easy. If there were no issue with Problem B, perhaps the champion team can solve
+all the 7 problems in only three out of five hours. Those teams literally code "in no time" :D.
+</p>
+
+<p align="center">
+<a href="indonesian.jpg"><img src="small_indonesian.jpg" width="700"></a><br>
+Indonesian teams took photo together before going back.
+</p>
+
+<h1>Special Thanks</h1>
+<ul>
+<li>Dr Sun Teck TAN, Contest Director, ACM ICPC Singapore Site
+<li>Registration (any) committees, <a href="http://www.comp.nus.edu.sg/~stevenha">Steven Halim</a> et. all. 
+<li>Judges, Melvin Zhang et. all. and the problem setters.
+<li>Photographer from YoiMon, Andrian Kurniady. Thanks kur for the great camera and also thanks to Suhendry who took the pictures for me and my team.
+</ul>
+
+<h1>External links</h1>
+<ul>
+<li><a href="http://www.comp.nus.edu.sg/~acmicpc/">ACM ICPC Singapore Regional Contest Site</a>
+<li><a href="http://icpc.baylor.edu/icpc/regionals/ViewRegionalStandings.asp?ContestID=880">The 2007 ACM Asia - Singapore standings</a>
+<li><a href="http://nomoreac.wordpress.com/2007/12/20/the-2007-acm-asia-programming-contest-singapore/">Timotius Sakti's blog</a> (How YoiMon was doing in the contest)
+<li><a href="http://www.kurniady.net/">Andrian Kurniady's blog</a> (day by day basis... gak tau kapan muncul blog ttg regional NUS nya :P)
+<li><a href="http://suhendry.net/blog/">Suhendry Effendi's blog</a> (mana shu.. gw tunggu blog elu!!)
+</ul>
+
+<p><a href="mailto:felix.halim@gmail.com">Let me know</a> if there are any other blogs/news.
+
+<script>
+/*
+function showCode(pre){
+	pre.innerHTML = pre.sourceCode;
+}
+
+var codes = document.getElementsByName("codes");
+for (var i=0; i<codes.length; i++){
+	var pre = codes[i];
+	pre.sourceCode = pre.innerHTML;
+	pre.innerHTML = '<a href="javascript:" onclick="showCode(this.parentNode)">view code</a>';
+}
+*/
+</script>
