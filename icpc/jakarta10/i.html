@@ -1,0 +1,48 @@
+<h1>Analysis Problem I - Romantic Date</h1>
+
+<p>Greedy strategy works.
+For each Wibowo card, find the highest of his girlfriend's card that is lower than the Wibowo's card (if any) and win it.
+Other strategies that yields the highest number of win can be reordered to match this strategy.
+</p>
+
+
+<pre class="source-code">
+#include &lt;stdio.h>
+
+#define REP(i,n) for (int i=0,_n=n; i&lt;_n; i++)
+
+int T,V,has[100];
+char C[10];
+
+int main(){
+    scanf("%d",&T);
+    while (T--){
+        REP(i,60) has[i] = 0;
+        REP(i,26){
+            scanf("%s",C);
+            switch (C[0]){
+                case 'T' : V = 8; break;
+                case 'J' : V = 9; break;
+                case 'Q' : V = 10; break;
+                case 'K' : V = 11; break;
+                case 'A' : V = 12; break;
+                default : V = C[0]-'2';
+            }
+            V *= 4;
+            switch (C[1]){
+                case 'D' : V += 0; break;
+                case 'C' : V += 1; break;
+                case 'H' : V += 2; break;
+                case 'S' : V += 3; break;
+            }
+            has[V] = 1;
+        }
+
+        int res = 0;
+        for (int i=60; i>=0; i--) if (has[i]==1)
+            for (int j=i-1; j>=0; j--) if (has[j]==0)
+                { has[j] = 2; res++; break; }
+        printf("%d\n",res);
+    }
+}
+</pre>

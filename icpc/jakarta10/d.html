@@ -1,0 +1,50 @@
+<h1>Analysis Problem D - Arm Wrestling Tournament</h1>
+
+<p>Well, I have nothing to say here.
+This problem is just to simulate what the problem statement says.
+</p>
+
+
+<pre class="source-code">
+#include &lt;vector>
+#include &lt;algorithm>
+
+using namespace std;
+
+#define REP(i,n) for (int i=0,_n=n; i&lt;_n; i++)
+
+struct Dummy {
+    int P0;   // initial strength
+    int P;    // current strength
+    int num;  // contestant number
+} A[1&lt;&lt;16];
+
+vector&lt;int> beat[1&lt;&lt;16]; // keeps track who beats who
+int T,N,K;
+
+int main(){
+    scanf("%d",&T);
+    while (T--){
+        scanf("%d %d",&N,&K);
+        REP(i,1&lt;&lt;N){
+            scanf("%d",&A[i].P0);
+            A[i].P = A[i].P0;   // initial strength = current strength
+            A[i].num = i;       // contestant number
+            beat[i].clear();    // reset the beats
+        }
+        for (N=1&lt;&lt;N; N>1; N>>=1){
+            int j = 0;
+            REP(i,N) if (i%2==0){
+                if (A[i].P &lt; A[i+1].P) swap(A[i], A[i+1]);     // A[i] is the winner
+                A[i].P = min(A[i].P0, A[i].P - A[i+1].P + K);  // winning rules
+                beat[A[i].num].push_back(A[i+1].num);          // track who beat who
+                A[j++] = A[i];                                 // array compaction
+            }
+        }
+        printf("%d\n",A[0].num+1);       // the winner
+        vector&lt;int> B = beat[A[0].num];  // the contestants that are beaten
+        REP(i,B.size()-1) printf("%d ",B[i]+1);
+        printf("%d\n",B.back()+1);
+    }
+}
+</pre>

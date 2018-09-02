@@ -1,0 +1,118 @@
+<h1>Analysis Problem J - Fire Drill</h1>
+
+<p>This problem can be decomposed into two sub-problems.
+The first is to calculate the shortest path from the starting point to all volunteers.
+The second is to calculate the minimum time to get as many points as possible given a limited time.
+The first sub-problem is easily solved using BFS, and the second sub-problem is the classical DP knapsack.</p>
+
+<p>There is an interesting slowness phenomenon of using vector is discussed below.</p>
+
+<pre class="source-code">
+#include &lt;queue>
+
+using namespace std;
+
+#define REP(i,n) for (int i=0,_n=n; i&lt;_n; i++)
+
+int dr[] = {-1,1,0,0};
+int dc[] = {0,0,-1,1};
+char B[11][101][102];
+int vis[11][101][102];
+int P[11][101][102];
+int T,L,H,W,N,S;
+
+struct Node {
+    int floor, row, col;
+    int state(){ return B[floor][row][col]; }
+    int points(){ return P[floor][row][col]; }
+    int canVisit(){
+        if (row&lt;0 || row>=H || col&lt;0 || col>=W || 
+            state()=='X' || vis[floor][row][col]) return false;
+        return vis[floor][row][col] = true;
+    }
+};
+
+int main(){
+    clock_t sc = clock();
+    scanf("%d",&T);
+    while (T--){
+        scanf("%d %d %d %d %d",&L,&H,&W,&N,&S);
+        REP(i,L) REP(j,H) scanf("%s",B[i][j]);
+        REP(i,N){ int f,r,c,p;
+            scanf("%d %d %d %d",&f,&r,&c,&p);
+            B[f-1][r-1][c-1] = 'V';
+            P[f-1][r-1][c-1] = p;
+        }
+        
+        queue&lt;Node> q;
+        memset(vis,0,sizeof(vis));
+        REP(i,L) REP(j,H) REP(k,W) if (B[i][j][k]=='S')
+            q.push((Node){i,j,k}), vis[i][j][k] = 1;
+
+        vector&lt;pair&lt;int,int> > timepoint; // the time to rescue a volunteer and its point
+        for (int dis=0; q.size(); dis++)
+            REP(qq,q.size()){
+                Node cur = q.front(), next = cur; q.pop();
+                switch (cur.state()){
+                    case 'V' : timepoint.push_back(make_pair(dis*3, cur.points())); break;
+                    case 'U' : next.floor++; if (next.canVisit()) q.push(next); break;
+                    case 'D' : next.floor--; if (next.canVisit()) q.push(next); break;
+                }
+                REP(k,4){
+                    next = (Node){ cur.floor, cur.row + dr[k], cur.col + dc[k] };
+                    if (next.canVisit()) q.push(next);
+                }           
+            }
+
+        vector&lt;int> dp(S+1); // DP knapsack
+        REP(i,timepoint.size()){
+            for (int s=S; s>0; s--){
+                int t = timepoint[i].first;
+                int p = timepoint[i].second;
+                if (s - t >= 0) dp[s] >?= dp[s-t] + p;
+            }
+        }
+        printf("%d\n",dp[S]);
+    }
+    fprintf(stderr,"%.3lf\n",1.0*(clock()-sc)/CLOCKS_PER_SEC);
+}
+</pre>
+
+<p>If you run the above code using <a target="_blank" href="j.zip">this input</a>, the runtime is around <b>7.8 seconds</b> (on my laptop).<br>
+Now, if you change the DP knapsack a bit to:</p>
+
+<pre class="source-code">
+    vector&lt;int> dp(S+1); // DP knapsack
+    REP(i,timepoint.size()){
+        <b>int t = timepoint[i].first;
+        int p = timepoint[i].second;</b>
+        for (int s=S; s>0; s--){
+            if (s - t >= 0) dp[s] >?= dp[s-t] + p;
+        }
+    }
+    printf("%d\n",dp[S]);
+</pre>
+
+<p>The runtime improves to <b>4.5 seconds</b>.
+Well... it makes sense, but 3 seconds difference is kinda huge, don't you think?<br>
+If you change the vector using plain array like this:
+</p>
+
+<pre class="source-code">
+    <b>int dp[10010] = {0};</b> // DP knapsack
+    REP(i,timepoint.size()){
+        int t = timepoint[i].first;
+        int p = timepoint[i].second;
+        for (int s=S; s>0; s--){
+            if (s - t >= 0) dp[s] >?= dp[s-t] + p;
+        }
+    }
+    printf("%d\n",dp[S]);
+</pre>
+
+<p>The runtime becomes <b>1.5 seconds</b>.
+Whoaa... does vector<int> allocation <b>THAT</b> slow?<br>
+If STL &lt;vector> is THAT slow... how about other STLs?!?!<br>
+Anyone can confirm this? post something on the chatbox at the top right of this page.</p>
+
+<p>Based on this observation, we increased the timelimit only for this problem.</p>

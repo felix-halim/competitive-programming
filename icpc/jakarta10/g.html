@@ -1,0 +1,108 @@
+<h1>Analysis Problem G - Just Sum It</h1>
+
+<p>Problem summary: given the number of available digit of 1 to 9, sum all possible numbers generated from those digits.</p>
+
+<p>This is another combinatoric problem, but a bit harder than problem B.
+The idea is to sum individual digit by picking a digit and try to count how many ways the other available digits 
+can be placed on the left side of it and the rest on the right side.
+We also need to try for all possible length for the resulting number.
+The maximum length of a number is the sum of all available digits (at most 81).
+</p>
+
+<p>Suppose we want to count the sum of all possible numbers of length <b>L</b> using the available digits, we can focus one digit at a time.
+The sum of all possible number of length <b>L</b> with digit <b>d</b> fixed on a
+certain position <b>p</b> (from the least significant digit) is <b>b * 10^(p-1) * C</b>,
+where <b>C</b> is the number of distinct number of length <b>L-1</b> that can be formed with the available digits excluding one digit <b>d</b>
+(since we already use/fix this digit).
+So, all we need is to sum all posibile position <b>p</b> on a number with length <b>L</b>, for all digit <b>d</b>.
+See function <b>calc()</b> in the sample code below.
+To calculate the number of distinct number with length <b>L</b> that can be formed with the current available digits
+minus one digit <b>d</b>, we can use Dynamic Programming. See function <b>f()</b> in the sample code below.</p>
+
+
+<pre class="source-code">
+#include &lt;stdio.h>
+#include &lt;string.h>
+
+#define REP(i,n) for (int i=0,_n=n; i&lt;_n; i++)
+#define MAXS 101
+
+int nCk[MAXS][MAXS], memo[MAXS][10][10], T, P[10], M = 1000000007;
+
+// returns how many ways we can form L digits,
+// assuming the repository is missing one digit P[E].
+// O(81 * 9 * 9 * 9)
+long long f(int L, int E, int I=0){
+    if (I > 9) return L == 0;
+    int &ret = memo[L][I][E];
+    if (ret!=-1) return ret; else ret = 0;
+    int digits = P[I] + (I==E? -1 : 0); // exclude 1 digit P[E]
+    for (int i=0; i&lt;=digits && i&lt;=L; i++)
+        ret = (ret + nCk[L][i] * f(L - i, E, I+1)) % M;
+    return ret;
+}
+
+// O(81 * 9 * 81)
+int calc(int total){
+    int sum = 0;
+    REP(length, total){ // for all length 0 to total-1
+        // pick one digit 'd' if it has at least 1 in the repository
+        for (int d=1; d&lt;=9; d++) if (P[d-1]>0){ 
+            // cnt = count how many ways we can form a number with 'length' digits long,
+            //       assuming one digit 'd' is missing form repository
+            long long cnt = f(length,d-1), pw = 1;
+
+            // try place digit d to all possible positions in a number with 
+            // 'length' digits long (there are 'length+1' possible positions)
+            for (int j=0; j&lt;=length; j++){ // try placing the digit 'd' from right to left
+
+                // the value for this digit is d * pw, where pw is 10^digits_on_the_right
+                long long value = d * pw % M;
+
+                // multiply this value with 'cnt' and add the value to global 'sum'
+                sum = (sum + value * cnt) % M;
+
+                pw = pw * 10 % M; // advance one digit to the left
+            }
+        }
+    }
+    return sum;
+}
+
+int main(){
+    nCk[0][0] = 1;
+    for (int i=1; i&lt;MAXS; i++){
+        nCk[i][0] = 1;
+        for (int j=1; j&lt;MAXS; j++)
+            nCk[i][j] = (nCk[i-1][j-1] + nCk[i-1][j]) % M;
+    }
+
+    scanf("%d",&T);
+    while (T--){
+        int total = 0;
+        REP(i,9) scanf("%d",&P[i]), total += P[i];
+        memset(memo,-1,sizeof(memo));
+        printf("%d\n", calc(total));
+    }
+}
+</pre>
+
+<p>It turns out the function calc() can be optimized in order of 81.
+That is by aggregate the digits <b>d</b> and possible positions <b>p</b> in a single loop.
+See the improved calc() function below.
+</p>
+
+<pre class="source-code">
+// O(9 * 81)
+int calc(int total){
+    int sum = 0;
+    for (int d=1; d&lt;=9; d++) if (P[d-1]>0){
+        long long pw = d;
+        REP(length, total){ 
+            sum = (sum + pw * f(length,d-1)) % M;
+            pw = (pw * 10 + d)% M;
+        }
+    }
+    return sum;
+}
+</pre>

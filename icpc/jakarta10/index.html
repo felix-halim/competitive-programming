@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>ACM ICPC Regional Jakarta 2010 :: Felix Halim .NET</title>
+  <meta name="author" content="Felix Halim">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/x-icon" href="/images/fh.jpg">
+  <link rel="stylesheet" type="text/css" href="/styles.css">
+  <script src="/script.js"></script>
+</head>
+
+<body>
+<script>document.write(toolbar_template());</script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/cupertino/jquery-ui.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+
+<style>
+.source-code {
+	background-color:#DDDDDD;
+	padding:25px;
+}
+</style>
+
+<script>
+function toggle_desc(p){
+	var desc = $('#desc_'+p);
+	if (desc.is(':visible')){
+		$('#a_'+p).html('Tampilkan Deskripsi Soal');
+	} else {
+		$('#a_'+p).html('Tutup Deskripsi Soal');
+	}
+	desc.toggle();
+}
+</script>
+
+<div style="margin:0 auto 0 auto; max-width:1000px;">
+
+<h1>ACM ICPC Regional Jakarta (Dec 1, 2010) - Analysis</h1>
+
+<p>I was one of the problem setters and judges for this event
+as well as reviewers for some of the problems.
+I figured it would be better to share my alternate solutions
+for others to learn and see if others can come up with better solutions.
+Together, we can get better, faster :)
+Here is <b><a target="_blank" href="problems.pdf">the problem set</a></b> and <b><a target="_blank" href="inout.zip">the input/output</a></b>.
+</p>
+
+<p>PS: You may want to check out analysis for problem J below.
+STL&lt;vector> is slow. Of course, probably the most interesting problem is problem H - Serial Numbers :)
+I spent > 5 hours to write the analysis that problem. Enjoy :D</p>
+
+<br style="clear:both">
+
+<div id="tabs" style="clear:both">
+	<ul>
+		<li><a href="#A">A</a></li>
+		<li><a href="#B">B</a></li>
+		<li><a href="#C">C</a></li>
+		<li><a href="#D">D</a></li>
+		<li><a href="#E">E</a></li>
+		<li><a href="#F">F</a></li>
+		<li><a href="#G">G</a></li>
+		<li><a href="#H">H</a></li>
+		<li><a href="#I">I</a></li>
+		<li><a href="#J">J</a></li>
+		<li><a href="#scoreboard">Scoreboard</a></li>
+		<li><a href="#cpbook">CP-Book</a></li>
+		<li><a href="#links">Links / Blogs</a></li>
+	</ul>
+  <script>
+    for (var i = 'a'.charCodeAt(0); i <= 'j'.charCodeAt(0); i++) {
+      var ch = String.fromCharCode(i);
+      document.write('<div id="'+ch.toUpperCase()+'" include-html="'+ch+'.html"></div>');
+    }
+  </script>
+	<div id="scoreboard" include-html="scoreboard.html"></div>
+	<div id="cpbook" include-html="cpbook.html"></div>
+	<div id="links" include-html="links.html"></div>
+</div>
+
+</div>
+
+<script>
+include_htmls();
+$(function() {
+  $("#tabs").tabs();
+});
+</script>

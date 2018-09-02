@@ -1,0 +1,83 @@
+<h1>Analysis Problem B - Counting BST</h1>
+
+<p>Problem summary: given a Binary Search Tree (BST) which shape depends on the given insertion order,
+and the possible range of labels to use.
+You are to count how many different insertion order (using the available labels) such that
+the resulting shape BST is the same with the given BST.</p>
+
+<p>This is a combinatoric problem:
+among <b>M</b> possible labels, we want to choose <b>N</b> of them and use it to construct a BST.
+Whatever <b>N</b> labels we pick, we can always form a BST.
+Now we have pick <b>N</b> labels, the second problem is
+to count how many BST insertion orders of the <b>N</b> labels 
+that will produce the same shape as the given BST.
+</p>
+
+<p>The first problem is easily solved by computing <b>N</b> choose <b>K</b> using Dynamic Programming (again).
+To answer the second problem, we need to imagine how we can insert a new node to a BST.
+First the new node arrive at the root of the tree, we have a choice to insert a new node to the left
+subtree or the right subtree. So, how many ways can we do this insertion?
+Remember that the resulting subtree must match the shape of the given BST.
+So, we can look at the given BST, how many child are there in the left subtree,
+and the number of ways we can insert to the left is <b>nCk[S][L]</b>,
+where <b>S</b> is the number of available labels to be inserted 
+(which must be equal to the the number of nodes in the left + right subtree of the node)
+and <b>L</b> is the number of nodes in the left subtree of the node.
+The remaining <b>S - L</b> nodes must go to the right subtree.
+Of course, this has to be applied recursively on the left and the right subtree.
+See the function <b>f()</b> in the sample code below.
+</p>
+
+
+<pre class="source-code">
+#include &lt;stdio.h>
+
+#define MAXN 1001
+
+struct Node {
+    int V;      // node's value
+    int L,R;    // pointer to left and right child
+    int nL,nR;  // the number of nodes in the left and right subtree
+} n[MAXN];
+
+int nCk[MAXN][MAXN], S, M = 1000003;
+
+void add(int &root, int val){
+    if (root==-1){
+        n[root = S++] = (Node){ val,-1,-1,0,0 };    // new node
+    } else {
+        Node &r = n[root];
+        if (val &lt; r.V)              // insert to the left if the value is &lt; root's
+            add(r.L, val), r.nL++;  // insert to the left, and increment left node count
+        else
+            add(r.R, val), r.nR++;  // insert to the right, and increment right node count
+    }
+}
+
+long long f(int root){
+    if (root==-1) return 1;
+    Node &r = n[root];
+    long long ret = nCk[r.nL + r.nR][r.nL]; // how many ways can we insert
+    ret = ret * f(r.L) % M;     // applied recursively
+    ret = ret * f(r.R) % M;     // applied recursively
+    return ret;
+}
+
+int main(){
+    nCk[0][0] = 1;
+    for (int i=1; i&lt;MAXN; i++){
+        nCk[i][0] = 1;
+        for (int j=1; j&lt;MAXN; j++)
+            nCk[i][j] = (nCk[i-1][j-1] + nCk[i-1][j]) % M; // Dynamic Programming
+    }
+
+    int TC;
+    scanf("%d",&TC);
+    while (TC--){
+        int N,T,val,root=-1; S = 1;
+        scanf("%d %d",&N,&T);
+        for (int i=0; i&lt;N; i++) scanf("%d",&val), add(root,val);
+        printf("%d\n", int( f(root) * nCk[T][N] % M )); // choose N labels out of available T
+    }
+}
+</pre>

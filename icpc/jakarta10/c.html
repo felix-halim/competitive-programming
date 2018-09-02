@@ -1,0 +1,37 @@
+<h1>Analysis Problem C - Playing with Stones</h1>
+
+<p>NIM game has become so popular in programming contests recently thanks to 
+<a target="_blank" href="http://www.topcoder.com/tc?module=Static&d1=tutorials&d2=algorithmGames">TopCoder's Algorithm Games tutorial</a>.
+To my surprise, this is the <b>first</b> problem solved in the contest (in 12 minutes)!
+This could mislead other teams to think that this problem is <b>that</b> easy.
+Well, it becomes easy only when you already learn about Grundy Numbers beforehand.
+I recommend you to read the TopCoder's tutorial above if you do not know about NIM game or Grundy Numbers.
+</p>
+
+<p>So, this problem is obviously a variant of a NIM game.
+What we have to do is to map this problem into an equivalent NIM game via Grundy Numbers.
+For certain game state in this problem, it is equivalent to a certain Grundy Number.
+You will need to sketch how the Grundy number is formed in this problem.
+After you've figured it out, the solution is just to xor all the Grundy numbers just like a NIM game.
+</p>
+
+<pre class="source-code">
+#include &lt;stdio.h>
+
+long long Grundy(long long x){
+    return x%2==0 ? x/2 : Grundy(x/2);
+}
+
+int main(){
+    long long T,N,res,A;
+    scanf("%lld",&T);
+    while (T--){
+        scanf("%lld",&N);
+        for (int i=res=0; i&lt;N; i++){
+            scanf("%lld",&A);
+            res ^= Grundy(A);
+        }
+        puts(res?"YES":"NO");
+    }
+}
+</pre>

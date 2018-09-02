@@ -1,0 +1,517 @@
+<style>
+#h_alg_table tr:nth-child(2),
+#h_alg_table tr:nth-child(3),
+#h_alg_table tr:nth-child(4),
+#h_alg_table tr:nth-child(5),
+#h_alg_table tr:nth-child(6)
+{ cursor: pointer; }
+#h_alg_table td, #h_alg_table th { border:0; }
+</style>
+
+<h1>Analysis Problem H - Serial Numbers</h1>
+
+<p>First of all, I'd like to say that I really like this problem :)
+As I suspected, this is the <b>hardest</b> problem in this contest.
+</p>
+
+<p>
+This problem is the generalization of
+<a target="_blank" href="http://felix-halim.net/story/inc08/index.php#/final-a">Superstitious Skylab Tower</a>
+problem which appeared in INC 2008, set by the same author: Ryan Leonel Somali.
+The Superstitious Skylab Tower problem only have two "opcodes",
+while this Serial Numbers can be up to 10 opcodes.
+Even though the solutions for both problems are similar (using <b>Dynamic Programming</b>),
+the difficulties arise on how to implement it <b>efficiently</b>.
+When we have only have 2 opcodes, these opcodes can be hard-coded in the DP state transitions,
+however if we have variable number of opcodes, K (&lt;= 10),
+hard-coded solution will become too complex to write.
+</p>
+
+<p>When I first coded an alternate solution for this problem, I think of a Binary Search + Dynamic Programming,
+but the states are string (the laziest and easiest-to-code DP state) and it ran too slow (> 900 seconds).
+Then I replaces the states into integers only (but the transitions still using strings) and it ran about 200 seconds.
+Finally, I precalculate the opcode string transitions, removing any string operations when computing the DP table,
+and it ran in less than 1 second :).
+Note that all these variants are based on the same DP idea: the DP states are a prefix of some opcodes, and the number of digits to be constructed.</p>
+
+<p>I will disscuss 5 versions: #1 is Brute Force, #2-4 is the idea above (BS + DP), 
+#5 is the solution used by <b>ManiAC</b> during the contest.</p>
+
+<p><b>Update</b>: from ManiAC's blog, a similar problem appeared in
+<a target="_blank" href="http://acmicpc-live-archive.uva.es/nuevoportal/data/problem.php?p=3124">NorthWestern Regional Contest 2004</a>. Seeing <a target="_blank" href="http://acmicpc-live-archive.uva.es/nuevoportal/rankprob.php?p=3124">the ranklist</a>, it seemed that they have solved that problem recently (just 2 months before this regional contest) and got the fastest solution?</p>
+
+<table id="h_alg_table" align="center" border="1" cellpadding="3">
+<tr height="35" class="ui-state-active"><th width="40">No<th width="425">Algorithm<th width="200">Complexity<th width="180">Runtime
+<tr id="h_alg_1" bgcolor="pink"><th>#1<td>Brute Force<th>O(T * N * 2^31-1)<th>Don't bother to run :P
+<tr id="h_alg_2" bgcolor="pink"><th>#2<td>Binary Search + DP with <b>string</b> states and transitions<th>O(T * N * 31 * K^7)<th>> 900 seconds
+<tr id="h_alg_3" bgcolor="pink"><th>#3<td>Binary Search + DP with <b>integer</b> states and <b>string</b> transitions<th>O(T * (K^6 + N * 31 * K^3)<th>> 200 seconds
+<tr id="h_alg_4" bgcolor="lightgreen"><th>#4<td>Binary Search + DP with <b>integer</b> states and transitions<th>O(T * (K^6 + N * 31 * K)<th>0.8 seconds
+<tr id="h_alg_5" bgcolor="lightgreen"><th>#5<td>DP with integers (<b>ManiAC</b>'s solution)<th>O(T * (K^4 + N * K * K))<th>0.02 seconds
+<tr><td colspan="4" width="700" style="padding:25px 20px 20px 20px">
+
+<div id="h_dummy"><center><b style="font-size:18px; color:blue">Click on the corresponding row above to see the details.</b></center></div>
+
+<div id="h_alg_1_desc">
+<h2 align="center">#1. Brute Force</h2>
+<p>The simplest approach is to loop from number 0 to infinity and maintain the count of valid numbers.
+The count is incremented when the current number is valid (i.e, no opcode contained in that number).
+If the count have reached the target, print the current number.
+Of course, this very simple solution will get TLE.
+See the sample solution below.</p>
+
+<pre class="source-code">
+#include &lt;stdio.h>
+#include &lt;string>
+
+using namespace std;
+
+#define REP(i,n) for (int i=0,_n=n; i&lt;_n; i++)
+
+string op[11];
+char num[20];
+int K;
+
+int brute_force(int X){
+    int cnt = 0;
+    for (int i=1; ; i++){
+        sprintf(num,"%d",i);
+        REP(j,K) if (strstr(num,op[j].c_str())) goto fail;
+        if (++cnt==X) return i;
+        fail:;
+    }
+}
+
+int main(){
+    int T,N,X;
+    scanf("%d",&T);
+    while (T--){
+        scanf("%d",&K);
+        REP(i,K) scanf("%s",num), op[i] = num;
+
+        scanf("%d",&N);
+        REP(i,N){
+            scanf("%d",&X);
+            printf("%d%c",brute_force(X),i+1==N?'\n':' ');
+        }
+    }
+}
+</pre>
+</div>
+
+<div id="h_alg_2_desc">
+<h2 align="center">#2. Binary Search + Dynamic Programming<br>(with string states and transitions)</h2>
+
+<blockquote style="background-color:#DDDDDD; margin:0; padding:15px">
+<p>Let <b>f(x)</b> be a function which returns <b>the number of valid serial numbers that are &lt;=x</b>.<br>
+A number is a valid serial number if there is no opcode appears in the substrings of the number.</p>
+
+<p>The answer is <b>min(Y)</b> where <b>f(Y) = B</b>, where 
+<b>B</b> is the batch production number, and <b>Y = [0 .. 2^31-1]</b>.<br>
+Since the function <b>f(x)</b> is a non-decreasing function, a binary search can be performed to find <b>Y</b>.<br>
+Now, the problem is how to implement <b>f(x)</b> efficiently.</p>
+</blockquote>
+
+<p>
+This solution implements <b>f(x)</b> using a Dynamic Programming which computes f(x) digit-by-digit
+from the first until the last digit.
+When processing the first digit, we try generate new numbers [1..9] avoiding opcodes and set the initial count = 1.
+When we proceed to the next digit, we try appending the previously generated numbers with a new digit [0..9] and increment the count.
+We need to carefully append the digits by checking whether the number is forming an opcode or becomes a prefix of some opcodes.
+We store the numbers that are a prefix of some opcodes in separate DP state and there can only be O(K*K) such states 
+(i.e, there are at most O(K*K) possible opcode prefix-es).
+</p>
+
+<p>We can calculate the state transition in O(K*K*K). That is, given a string <b>s</b>, 
+find an opcode which has the longest prefix that matches one of the suffixes of s.
+See the function is_op() in sample code below.
+</p>
+
+<p>The total complexity is <b style="color:red">O(T * N * 31 * K^7)</b>. That is, for each testcase <b>T</b>, and <b>N</b> queries,
+we perform a binary search in range [0..2^31-1].
+Each binary search, we compute <b>f(x)</b> for each <b>O(K)</b> digits, 
+where the number of states in each digit is up to <b>O(K*K)</b>,
+the transition is to append <b>O(K)</b> digits to the current state,
+and after appending, we check the opcode transition in <b>O(K*K*K)</b>.
+If <b>T=100, N=100, K=10</b>, it would take <b>O(31 * 10^11)</b> operations.
+Really slow, isn't it? :).
+</p>
+
+<pre class="source-code">
+#include &lt;map>
+#include &lt;string>
+#include &lt;algorithm>
+
+using namespace std;
+
+#define REP(i,n) for (int i=0,_n=n; i&lt;_n; i++)
+#define FORE(i,a) for (__typeof(a.begin()) i=a.begin(); i!=a.end(); i++)
+
+map&lt;long long, long long> memo;
+string op[11];
+char num[20];
+int K;
+
+// return 2:forbidden number, 1:potential to be forbidden, 0:clean
+int is_op(string &s){ // O(K*K*K)
+    REP(i,K) if (s.find(op[i])!=string::npos) return 2; // s is a forbidden number
+    while (s.length() > 0){
+        REP(i,K) if (op[i].find(s) == 0) return 1;      // s contains a prefix of some opcode
+        s = s.substr(1,s.length()-1);
+    }
+    return 0;   // s is clean
+}
+
+// returns how many valid numbers that are &lt;= x
+long long f(long long x){
+    if (memo.count(x)) return memo[x];
+    sprintf(num,"%lld",x);
+    map&lt;pair&lt;string,bool>,long long> dp; // DP[s][below] = how many valid number &lt;= x
+    for (int i=0; num[i]; i++){          // s = some opcode prefix, below = the number &lt;= x
+        map&lt;pair&lt;string,bool>,long long> ndp;
+        for (int d=1; d&lt;10 && (i>0 || d&lt;=num[0]-'0'); d++){  // assume a new number is formed
+            string s = ""; s += '0'+d;
+            if (is_op(s)==2) continue;
+            bool below = i>0 || d &lt; num[0]-'0';
+            ndp[make_pair(s,below)] += 1;
+        }
+        FORE(mi,dp){                     // try appending the previous numbers with new digits
+            string s = mi->first.first;
+            bool below = mi->first.second;
+            long long cnt = mi->second;
+            for (int d=0; d&lt;10 && (below || d&lt;=num[i]-'0'); d++){ // d = digit to be appended
+                string ns = s; ns += '0'+d;
+                if (is_op(ns)==2) continue;
+                bool nbelow = below || (d &lt; num[i]-'0');
+                ndp[make_pair(ns,nbelow)] += cnt;
+            }
+        }
+        dp = ndp;
+        assert(dp.size() &lt;= (K+1)*(K+1)*2 + 4); // the number of DP states per digit is O(K*K)
+    }
+    long long ret = 0;
+    FORE(i,dp) ret += i->second;
+    return memo[x] = ret;
+}
+
+long long bsearch(int B){
+    long long lo=0, hi=1024, res=-1;
+    while (f(hi) &lt; B) lo=hi, hi*=2; hi++;    // just to find the initial (lo,hi)
+    while (lo&lt;=hi){
+        long long mid = (lo+hi)/2, cnt = f(mid);
+        if (cnt &lt; B) lo = mid+1; else res = mid, hi = mid-1;
+    }
+    return res;
+}
+
+int main(){
+    int T,N,B;
+    scanf("%d",&T);
+    while (T--){
+        scanf("%d",&K);
+        REP(i,K) scanf("%s",num), op[i] = num;
+
+        memo.clear();
+        scanf("%d",&N);
+        REP(i,N){
+            scanf("%d",&B);
+            printf("%lld%c",bsearch(B),i+1==N?'\n':' ');
+        }
+    }
+}
+</pre>
+</div>
+
+
+<div id="h_alg_3_desc">
+<h2 align="center">#3. Binary Search + Dynamic Programming<br>(with integer states and string transitions)</h2>
+
+<p>The general idea is still the same with algorithm #2, but the states is changed to integers,
+therefore the DP can be implemented using plain array rather than STL &lt;map>.
+This gives minor O(log(K*K)) performance improvement.
+This can be done because the substring must be in one of the opcodes,
+therefore, instead of storing a string, we can store it as integers pointing to an opcode index
+and its starting position.
+Another DP state from algorithm #2 that can be removed is the <b>below</b>.
+We don't need to keep track whether it's currently below <b>x</b> or not by never generating
+numbers larger than <b>x</b>.</p>
+
+<p>Changing the way we compute the DP matters.
+It turns out that the "DP on the fly" in algorithm #2 is not leveraging memoization technique.
+While it can do DP with only O(K*K) states, it will have to recalculate for every query (there are N queries).
+So, it's better to include the length of the remaining digits into the DP states
+so that each query can use the memo. Thus, we can save an order of O(k) for one of the inner loop in function f().
+</p>
+
+<p>The total complexity is <b style="color:red">O(T * (K^6 + N * 31 * K^3)</b>. 
+For each testcase, the memoization will need O(K^6) (see the rec() function) to be filled in.
+Assuming the memo already filled in and returns in O(1), then for each query we only need
+to do binary search O(31) with O(K*K*K) for computing f(x).
+If <b>N=100, K=10</b> then it is O(T * 31 * 10^5).
+So, it's about 3 million operations per testcase. It should be fast enough, but since
+we are still using string for the transitions, 
+the constant factor the innermost operations is too large.
+The next algorithm #4 fixes this problem.
+</p>
+
+<pre class="source-code">
+#include &lt;string>
+#include &lt;vector>
+
+using namespace std;
+
+#define REP(i,n) for (int i=0,_n=n; i&lt;_n; i++)
+
+int memo[11][11][11]; // uses plain array
+vector&lt;string> op;
+char num[20];
+
+// return -1 if s is an opcode
+// return the index of an opcode which has the longest prefix
+//        that matches one of the suffixes of s.
+// return 0 if s doesn't contain any opcode prefix
+int is_op(string &s){
+    REP(i,op.size()) if (s.find(op[i])!=string::npos) return -1;
+    while (s.length() > 0){
+        REP(i,op.size()) if (op[i].find(s) == 0) return i;
+        s = s.substr(1,s.length()-1);
+    }
+    return 0;
+}
+
+// rem = remaining digits to be processed
+// s = string with possible an opcode prefix (if exists)
+// O(K * K*K * K*K*K)
+int rec(int rem, string s){ // parameter size is O(K * K*K)
+    int oidx = is_op(s);    // translate string s to (oidx, opos) in O(K*K*K)
+    if (oidx==-1) return 0;
+    if (rem==0) return 1;
+    int opos = oidx==op.size()? 0 : s.length();
+    string p = oidx&lt;op.size()? op[oidx].substr(0,opos) : "";
+    int &ret = memo[rem][oidx][opos];
+    if (ret!=-1) return ret; else ret = 0;
+    REP(d,10) ret += rec(rem-1, p + string(1,'0'+d)); // try append new digits
+    return ret;
+}
+
+// O(K * K * K)
+int f(int x){
+    if (x==0) return 0;
+    sprintf(num,"%d",x);
+    string p = "";
+    int ret = 0;
+    for (int i=0,len=strlen(num); i&lt;len; i++){   // never generate number > x
+        REP(d,10) if (i!=0 || d!=0){
+            if (i>0 && d>0) ret += rec(len-i-1, string(1,'0'+d));
+            if ('0'+d &lt; num[i]) ret += rec(len-i-1, p + string(1,'0'+d));
+        }
+        p += num[i];
+    }
+    if (is_op(p)!=-1) ret++; // here is_op() uses O(K*K*K)
+    return ret;
+}
+
+int bsearch(int B){
+    int lo=0, hi=2147483647;
+    while (lo+1 &lt; hi){
+        int mid = lo + (hi-lo)/2;
+        if (f(mid) &lt; B)
+            lo = mid;
+        else
+            hi = mid;
+    }
+    return hi;
+}
+
+int main(){
+    int T,K,N,X;
+    scanf("%d",&T);
+    while (T--){
+        scanf("%d",&K);
+        op.clear();
+        REP(i,K) scanf("%s",num), op.push_back(num);
+        
+        memset(memo,-1,sizeof(memo));
+        scanf("%d",&N);
+        REP(i,N){
+            scanf("%d",&X);
+            printf("%d%c",bsearch(X),i+1==N?'\n':' ');
+        }
+    }
+}
+</pre>
+</div>
+
+
+<div id="h_alg_4_desc">
+<h2 align="center">#4. Binary Search + Dynamic Programming<br>(with integer for both states and transitions)</h2>
+<p>As you may have noticed in algorithm #3 that the bottleneck is on the is_op() function which takes O(K*K*K)
+which is used in subroutines for the rec() function. The last optimization is to precalculate the
+transitions (the is_op() function), so that each transition can be done in O(1).
+In a sense, algorithm #3 is also flying some DP states, in this case: whether the current state is the first digit.
+By incorporating this into the memoization, the function f(x) can be made faster from O(K*K) to O(K).
+</p>
+
+
+<p>The total complexity is <b style="color:red">O(T * (K^6 + N * 31 * K)</b>. 
+For each testcase, the precalculation will need O(K^6) (see the precalculateTransitions() function).
+Assuming the memo already filled in and returns in O(1), then for each query we only need
+to do binary search O(31) with O(K) for computing f(x).
+If <b>N=100, K=10</b> then it is O(T * 10^6), that is O(10^6) per testcase at worst.
+Note that this solution has far lower constant factor than algorithm #3 since no string operations involved.
+The complexity of computing the DP transition can be improved using trie and suffix link like structure,
+but this is not needed to get AC.
+</p>
+
+<p>
+I've spent ~5 hours to refine my code from algorithm #2, to #3 then to #4.
+I'm surprised there was a team that could solve this problem in contest time.
+Moreover, the team (ManiAC) solved it with even better complexity (see algorithm #5).
+</p>
+
+<pre class="source-code">
+#include &lt;string>
+#include &lt;vector>
+
+using namespace std;
+
+#define REP(i,n) for (int i=0,_n=n; i&lt;_n; i++)
+
+int memo[11][11][11][2][11]; // memo states are in integer
+int trans[11][11][11][2];    // transitions are in integer
+vector&lt;string> op;
+char num[20];
+
+// O(10*10*10*2*10*10)
+int rec(int rem, int oidx, int opos, int first, int mx){
+    if (rem==0) return 1;
+    int &ret = memo[rem][oidx][opos][first][mx];
+    if (ret!=-1) return ret; else ret = 0;
+    REP(d,mx) if (!first || d>0){
+        int noidx = trans[oidx][opos][d][0];
+        int nopos = trans[oidx][opos][d][1];
+        ret += noidx==-1? 0 : rec(rem-1, noidx, nopos, 0, 10);
+    }
+    return ret;
+}
+
+// O(10)
+int f(int x){
+    if (x==0) return 0; else sprintf(num,"%d",x);
+    int ret=0, oidx=op.size(), opos=0, len=strlen(num);
+    REP(i,len){
+        if (i>0) ret += rec(len-i, op.size(), 0, 1, 10);
+        if (oidx!=-1){
+            ret += rec(len-i, oidx, opos, i==0, num[i]-'0');
+            int a = trans[oidx][opos][num[i]-'0'][0];
+            int b = trans[oidx][opos][num[i]-'0'][1];
+            oidx = a; opos = b;
+        }
+    }
+    return ret + (oidx!=-1);
+}
+
+// O(31 * 10)
+int bsearch(int X){
+    int lo=0, hi=2147483647;
+    while (lo+1 &lt; hi){
+        int mid = lo + (hi-lo)/2;
+        if (f(mid) &lt; X)
+            lo = mid;
+        else
+            hi = mid;
+    }
+    return hi;
+}
+
+// O(10*10*10)
+int is_op(string &s){
+    REP(i,op.size()) if (s.find(op[i])!=string::npos) return -1;
+    while (s.length() > 0){
+        REP(i,op.size()) if (op[i].find(s) == 0) return i;
+        s = s.substr(1,s.length()-1);
+    }
+    return op.size();
+}
+
+// O(10*10*10 * 10*10*10)
+void precalculateTransitions(){
+    REP(d,10){
+        string s = string(1,'0'+d);
+        int &a = trans[op.size()][0][d][0]; a = is_op(s);
+        int &b = trans[op.size()][0][d][1];
+        b = (a==op.size() || a==-1)? 0 : s.length();
+    }
+    REP(oidx,op.size()){
+        string s1 = "";
+        REP(opos,op[oidx].length()){
+            s1 += op[oidx][opos];
+            REP(d,10){              // try append digit d to current op codes
+                string s = s1 + string(1,'0'+d);
+                int &a = trans[oidx][opos+1][d][0]; a = is_op(s); // O(K*K*K)
+                int &b = trans[oidx][opos+1][d][1];
+                b = (a==op.size() || a==-1)? 0 : s.length();
+            }
+        }
+    }
+}
+
+int main(){
+    int T,K,N,X;
+    scanf("%d",&T);
+    while (T--){
+        op.clear();
+        scanf("%d",&K);
+        REP(i,K) scanf("%s",num), op.push_back(num);
+
+        precalculateTransitions();      // O(10*10*10 * 10*10*10)
+        memset(memo,-1,sizeof(memo));   // O(10*10*10 *  2*10*10)
+
+        scanf("%d",&N);
+        REP(i,N){
+            scanf("%d",&X);
+            printf("%d%c",bsearch(X),i+1==N?'\n':' ');
+        }
+    }
+}
+</pre>
+</div>
+
+<div id="h_alg_5_desc">
+<h2 align="center">#5. Dynamic Programming<br>(with integer states and transitions)</h2>
+
+<p>Team <b>ManiAC</b> solved this problem elegantly.
+They use trie and employ some kind of suffix links to build the transitions in O(K^4).
+They use two DP tables: the one is storing the count of serial numbers with possible leading zeros,
+the other is the count of serial numbers without leading zeros.
+Both DP states are dp[length][transition-state] = count of serial numbers.
+As discussed in algorithm #2, the number of state-transitions is O(K*K).
+</p>
+
+<p>To answer a query, they don't use binary search.
+Instead, they first find the length L of the answer by looking up from the second DP table, 
+terminating at the first length that exceeds the query number.
+To get the exact serial number, they loop L times to construct L digits.
+For each digit, they use the first DP table to find the first digit that have 
+serial number count >= x.
+Thus the complexity to answer a query is O(K*K).</p>
+
+<p>The total complexity is <b style="color:red">O(T * (K^4 + N * K * K)</b>. 
+It runs blindingly fast.</p>
+
+</div>
+</table>
+
+<script>
+$('#h_alg_table div').hide();
+$('#h_dummy').show();
+function h_show_desc(tr,div){
+	return function(){
+		$('#h_alg_table div').hide();
+		div.show();
+	}
+}
+for (var i=1; i<=5; i++){
+	var tr = $('#h_alg_'+i), div = $('#h_alg_'+i+'_desc');
+	tr.click(h_show_desc(tr,div));
+}
+</script>

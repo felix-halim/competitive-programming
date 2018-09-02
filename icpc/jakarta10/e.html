@@ -1,0 +1,218 @@
+<h1>Analysis Problem E - Lightning Energy Report</h1>
+
+<p>I am the problem setter for this problem.
+Well.. I made this problem so that it's supposed to be solved using 
+<b>Heavy-Light tree decomposition + Segment Tree</b>.
+But, because of the limitation of PC2's output, the input has to be small enough to produce small enough output.
+As the result, a number of tricks manage to get Accepted.
+I will first discuss my solution first and then discuss what are the tricks that are used by the teams who solved this problem.
+</p>
+
+<p>First observation is that, the input is a tree. 
+So, it is a special kind of graph and usually there are tricks to speedup computations.
+One trick is to use <b>Heavy-Light tree decomposition</b> (you can Google it).
+This will decompose a tree into line segments so that if you are in any node in the tree and want
+to travel to the root of the tree, you only need to cross at most <b>log(N)</b> line segments.
+After decomposing the tree into line segments, we can build a segment tree for each line segment
+so that we can manipulate the values in a certain range of the line segment in <b>O(log(N))</b>.
+</p>
+
+<p>The problem asks to increment all the node values between node <b>A</b> and <b>B</b> in the tree.
+So, there are at most <b>O(2 * log(N))</b> line segments to update and only need <b>O(log(N))</b> to update
+a range in the line segment, thus to process one update query the complexity is <b>O(log^2(N))</b>.
+See the sample code for the sample implementation.</p>
+
+<p>The other teams solved this problems using tricks like:
+<ol>
+<li>Cleverly pick the root so that the tree height is minimum.
+Sadly, the judge's testcase doesn't contain a linear linked list -_-,
+so this solution run moderately fast (as the time limit is set to quite large).
+<li>Precalculate the path to the root so that for each query,
+only need to spend as needed steps from the two house to the least common ancestors of both house
+in respect to the root.
+This is the simplest way to code.
+<li>Well.. there is a clever way to aggregate the lightning.
+For each lightning query, update the tree state in O(1) by marking the nodes only.
+Then just before printing, a DFS is performed to actually apply the value for each node.
+This probably is the ideal way to solve this problem.
+To my surprise, many teams uses this trick!
+</ol>
+</p>
+
+<p>
+The first and second tricks should not have got Accepted, 
+but since the Judge's testcase is weak (because of PC2's limitation) a few teams got it accepted.
+Only one team uses my way... it's the hard way... :P
+</p>
+
+
+<pre class="source-code">
+#include &lt;stdio.h>
+#include &lt;vector>
+#include &lt;map>
+#include &lt;algorithm>
+
+using namespace std;
+
+#define MAXN 100001
+
+#define REP(i,n) for (int i=0,_n=n; i&lt;_n; i++)
+
+struct Node { int L,R,V,T; };
+vector&lt;vector&lt;Node> > ns;
+vector&lt;vector&lt;int> > as;
+
+class SegmentTree {
+public:
+    int idx, root;
+    SegmentTree(int ii){
+        ns.push_back(vector&lt;Node>());
+        as.push_back(vector&lt;int>());
+        idx = ii;
+    }
+    void add(int v){ as[idx].push_back(v); }
+    void build(){ root = rec_build(0, as[idx].size()-1); }
+    void update(int x, int y, int v){ rec_update(root, 0, as[idx].size()-1, 0, x, y, v); }
+    int query(int x, int y){ return rec_query(root, 0, as[idx].size()-1, 0, x, y); }
+
+private:
+    int rec_build(int x, int y){
+        vector&lt;Node> &n = ns[idx];
+        vector&lt;int> &a = as[idx];
+        n.push_back((Node){0,0,0});
+        int id = n.size()-1;
+        if (x==y){
+            n[id].T = 0;
+            n[id].V = a[x];
+        } else {
+            int z = (x+y)/2;
+            int tmp = rec_build(x,z); // if you don't use tmp -> crash!
+            n[id].L = tmp;
+                
+            tmp = rec_build(z+1,y); // this also
+            n[id].R = tmp;
+            n[id].V = val(n[n[id].L],x,y) + val(n[n[id].R],x,y);
+        }
+        return id;
+    }
+
+    int rec_update(int r, int x, int y, int t, int qx, int qy, int v){
+        assert(qx&lt;=qy);
+        vector&lt;Node> &n = ns[idx]; n[r].T += t;
+        if (qx&lt;=x && y&lt;=qy){ n[r].T += v; return 1; }
+        if (y&lt;qx || qy&lt;x) return -1;
+        int z = (x+y)/2; t = n[r].T; n[r].T = 0;
+        int ret = rec_update(n[r].L, x,z,t, qx,qy,v) | rec_update(n[r].R, z+1,y,t, qx,qy,v);
+        n[r].V = val(n[n[r].L],x,y) + val(n[n[r].R],x,y);
+        return ret;
+    }
+
+    int rec_query(int r, int x, int y, int t, int qx, int qy){
+        vector&lt;Node> &n = ns[idx]; n[r].T += t;
+        if (qx&lt;=x && y&lt;=qy) return val(n[r],x,y);
+        if (y&lt;qx || qy&lt;x) return 0;
+        int z = (x+y)/2; t = n[r].T; n[r].T = 0;
+        int L = rec_query(n[r].L, x,z,t, qx,qy);
+        int R = rec_query(n[r].R, z+1,y,t, qx,qy);
+        return L + R;
+    }
+
+    int val(Node &n, int x, int y){
+        return n.V + (y-x+1) * n.T;
+    }
+};
+
+vector&lt;int> con[MAXN];
+int t[MAXN]; // t[i] = deepest child for node i
+
+int rec(int r, int p=-1){
+    int md = -1;
+    REP(i,con[r].size()){
+        int j = con[r][i];
+        if (j==p) continue;
+        int d = rec(j, r);
+        if (d > md) md = d, t[r] = i;
+    }
+    return md + 1;
+}
+
+struct Location { int num, pos, par; };
+vector&lt;SegmentTree> sts;
+Location loc[MAXN];
+
+// r = the root index
+// snum = segment tree index
+// spos = root position in the current segment tree snum
+// spar = parent of this segment tree snum
+// p = parent of this tree traversal
+void build(int r, int snum, int spos, int spar, int p){
+    loc[r] = (Location){ snum, spos, spar };
+    sts[snum].add(0);
+    int leaf = 1;
+    REP(i,con[r].size()) if (con[r][i]!=p){
+        if (t[r] == i){ // i is the deepest child
+            build(con[r][i], snum, spos+1, spar, r);
+        } else {
+            sts.push_back(SegmentTree(sts.size()));
+            build(con[r][i], sts.size()-1, 0, r, r);
+        }
+        leaf = 0;
+    }
+    if (leaf) sts[snum].build();
+}
+
+int main(){
+    int T;
+    scanf("%d",&T);
+    for (int TC=1; TC&lt;=T; TC++){
+        int root = 0, n,q,a,b,c;
+        scanf("%d",&n);
+
+        REP(i,n) con[i].clear();
+        ns.clear(); as.clear(); sts.clear();
+
+        REP(i,n-1){
+            scanf("%d %d",&a,&b);
+            con[a].push_back(b);
+            con[b].push_back(a);
+        }
+        rec(root); // calculate subtree size for building the Heavy-Light tree
+
+        sts.push_back(SegmentTree(sts.size())); // root line segment
+        build(root,0,0,-1,-1); // build Segment-Tree on Heavy-Light tree
+
+        scanf("%d",&q);
+        map&lt;int,int> spos;
+        REP(i,q){
+            scanf("%d %d %d",&a,&b,&c);
+            spos.clear();
+            for (int x=a; x!=-1; x=loc[x].par){
+                int s = loc[x].num, p = loc[x].pos;
+                sts[s].update(0,p,c);
+                spos[s] = p;
+            }
+            for (int x=b,f=1; x!=-1; x=loc[x].par){
+                int s = loc[x].num, p = loc[x].pos;
+                if (spos.count(s)){
+                    if (f){
+                        f = 0;
+                        if (spos[s] &lt; p){
+                            sts[s].update(0,spos[s],-c);
+                            sts[s].update(spos[s],p,c);
+                        } else if (p>0){
+                            sts[s].update(0,p-1,-c);
+                        }
+                    } else {
+                        sts[s].update(0,p,-c);
+                    }
+                } else {
+                    sts[s].update(0,p,c);
+                }
+            }
+        }
+
+        printf("Case #%d:\n",TC);
+        REP(i,n) printf("%d\n",sts[loc[i].num].query(loc[i].pos, loc[i].pos));
+    }
+}
+</pre>

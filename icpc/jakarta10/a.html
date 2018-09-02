@@ -1,0 +1,69 @@
+<h1>Analysis Problem A - Worst Locations</h1>
+
+<p>Problem summary: given a tree and two starting node Xa and Xb at two different leaf of the tree, and two distances Ya and Yb.
+Find whether there exist a node <b>A</b> with distance exactly Ya steps away from Xa and another node <b>B</b>
+with distance exactly Yb steps away from Xb such that distance between A and B is bigger than Z.</p>
+
+<p>After some quick sketch, you will discover that there can be up to O(2^N) possible locations for <b>A</b> and <b>B</b>.
+Further analysis will discover the <b>pattern</b> of the locations of the nodes with "exactly Y distance away from leaf X".
+Suppose you are exactly Y distance away from X and the tree height is N, the possible locations are:
+Go up the tree <b>D</b> steps and from there, 
+the possible locations are all the nodes in the other subtree (not the subtree where you go up from)
+with height <b>Y-D</b> away.
+Now, <b>D</b> can vary between <b>0</b> to <b>Y</b>, but not all <b>D</b> are valid since the distance has to be <b>exact</b>.
+A distance <b>D</b> is <b>valid</b> if the height of the other subtree of the possible location is bigger or equal to the remaining distance <b>Y-D</b> (this will ensure the existance of such possible nodes).
+</p>
+
+<p>Since there is at most <b>N</b> possible values for <b>D</b>, we can do brute force on both pandas' starting nodes
+and check for two possible pair of subtrees whether the there exists a node with distance > <b>Z</b>.
+This check is easy: suppose you have two subtrees <b>Sa</b> and <b>Sb</b> and the possible locations are <b>Da</b> and <b>Db</b> steps away 
+from the root of the subtree, respectively.
+The subtree Sa and Sb have a least common ancestor <b>C</b>.
+Then the maximum distance between a possible node in the subtree Sa with another possible node in the subtree Sb is
+<b>Da + Db + distance(Sa's root, C) + distance(Sb's root, C)</b>,
+where distance(x,y) is the distance between two node in the tree.
+See sample code below.
+</p>
+
+<pre class="source-code">
+#include &lt;stdio.h>
+
+struct Subtree { // a Subtree with possible locations
+    int L, I, D, P; // a Subtree consist of level, index, distance, and previous child
+    bool valid(int N){ return N - L >= D; }     // current height must be >= D
+    bool up(){ return L > 1 && D > 0; }         // can move up one level?
+    void go_up(){ L--; D--; P = I; I >>= 1; }   // move to parent node
+    bool down(){ return P !=- 1 && D > 0; }     // can move down one level?
+    void go_down(){ L++; D--; I &lt;&lt;= 1; if (I==P) I++; P = -1; } // move to other child
+};
+
+// returns the maximum distance between any possible node 
+// in subtree a with any possible node in subtree b
+int dist(Subtree Sa, Subtree Sb){ 
+    if (Sa.down()) Sa.go_down(); // must travel to the other subtree if possible
+    if (Sb.down()) Sb.go_down(); // must travel to the other subtree if possible
+    int ret = Sa.D + Sb.D; // downward distance of node Sa + downward distance of node Sb
+    while (Sa.L != Sb.L || Sa.I != Sb.I){ // computing distance of root of Sa to root of Sb
+        if (Sa.L > Sb.L) Sa.go_up(); else Sb.go_up();
+        ret++; // distance of Sa and Sb to reach lca(Sa,Sb)
+    }
+    return ret;
+}
+
+int main(){
+    int T,N,Xa,Ya,Xb,Yb,Z;
+    scanf("%d",&T);
+    while (T--){
+        scanf("%d %d %d %d %d %d",&N,&Xa,&Ya,&Xb,&Yb,&Z);
+        bool possible = false;
+        for (Subtree Sa = (Subtree){ N, Xa-1, Ya, -1 }; !possible; Sa.go_up()){
+            for (Subtree Sb = (Subtree){ N, Xb-1, Yb, -1 }; !possible; Sb.go_up()){
+                if (Sa.valid(N) && Sb.valid(N) && dist(Sa,Sb) > Z) possible = true;
+                if (!Sb.up()) break;
+            }
+            if (!Sa.up()) break;
+        }
+        puts(possible?"YES":"NO");
+    }
+}
+</pre>
